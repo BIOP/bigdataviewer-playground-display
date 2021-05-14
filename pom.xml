@@ -75,7 +75,8 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display</system>
+		<system>Travis CI</system>
+		<url>https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display</url>
 	</ciManagement>
 
 	<properties>
