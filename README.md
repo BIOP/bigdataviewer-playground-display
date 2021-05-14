@@ -1,4 +1,3 @@
-[![](https://travis-ci.com/NicoKiaru/bigdataviewer_playground_display.svg?branch=master)](https://travis-ci.com/NicoKiaru/bigdataviewer_playground_display)
 
 ## BigDataViewer Playground Display 
 
