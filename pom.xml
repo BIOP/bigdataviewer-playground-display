@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji.bigdataviewer</groupId>
 	<artifactId>bigdataviewer-playground-display</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.1</version>
 
 	<name>BigDataViewer Playground Display</name>
 	<description>Display (metadata and projectors) for BigDataViewer Playground.</description>
@@ -66,7 +66,7 @@
 		<connection>scm:git:git://github.com/NicoKiaru/bigdataviewer-playground-display</connection>
 		<developerConnection>scm:git:git@github.com:NicoKiaru/bigdataviewer-playground-display</developerConnection>
 		<url>https://github.com/NicoKiaru/bigdataviewer-playground-display</url>
-		<tag>HEAD</tag>
+		<tag>bigdataviewer-playground-display-0.1.1</tag>
 	</scm>
 	
 	<issueManagement>
