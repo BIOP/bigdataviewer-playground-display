@@ -11,11 +11,11 @@
 
 	<groupId>sc.fiji.bigdataviewer</groupId>
 	<artifactId>bigdataviewer-playground-display</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 
 	<name>BigDataViewer Playground Display</name>
 	<description>Display (metadata and projectors) for BigDataViewer Playground.</description>
-	<url>&gt;http://biop.epfl.ch</url>
+	<url>http://biop.epfl.ch</url>
 
 	<inceptionYear>2021</inceptionYear>
 
@@ -75,14 +75,14 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display</system>
+		<system>Travis CI</system>
+		<url>https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display</url>
 	</ciManagement>
 
 	<properties>
 		<license.licenseName>N/A</license.licenseName>
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
-		<scijava.app.subdirectory>plugins/BIOP</scijava.app.subdirectory>
 
 		<bigdataviewer-playground.version>0.3.1</bigdataviewer-playground.version>
 		<bigdataviewer-spimdata-extras.version>0.1.1</bigdataviewer-spimdata-extras.version>
