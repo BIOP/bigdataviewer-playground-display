@@ -1,23 +1,22 @@
-package sc.fiji.bdvpg.bdv.supplier.alpha;
-
+package sc.fiji.bdvpg.bdv.supplier.biop;
 
 import org.scijava.Context;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import sc.fiji.bdvpg.bdv.supplier.DefaultBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
-import sc.fiji.bdvpg.bdv.supplier.SerializableBdvOptions;
+import sc.fiji.bdvpg.bdv.supplier.alpha.AlphaBdvSupplier;
+import sc.fiji.bdvpg.bdv.supplier.alpha.AlphaSerializableBdvOptions;
 import sc.fiji.bdvpg.scijava.ScijavaBdvDefaults;
 import sc.fiji.bdvpg.scijava.command.BdvPlaygroundActionCommand;
 import sc.fiji.bdvpg.scijava.services.SourceAndConverterBdvDisplayService;
 
 import java.util.Arrays;
 
-@Plugin(type = BdvPlaygroundActionCommand.class, menuPath = ScijavaBdvDefaults.RootMenu+"BDV>BDV - Set BDV window (alpha)",
-        description = "Set preferences of Bdv Window (Alpha)")
-public class BdvSetAlphaViewerSettingsCommand implements BdvPlaygroundActionCommand{
+@Plugin(type = BdvPlaygroundActionCommand.class, menuPath = ScijavaBdvDefaults.RootMenu+"BDV>BDV - Set BDV window (biop)",
+        description = "Set preferences of Bdv Window (Biop)")
+public class BdvSetBiopViewerSettingsCommand implements BdvPlaygroundActionCommand{
 
-    @Parameter(label = "Click this checkbox to ignore all parameters and reset the default alpha viewer", persist = false)
+    @Parameter(label = "Click this checkbox to ignore all parameters and reset the default biop viewer", persist = false)
     boolean resetToDefault = false;
 
     @Parameter
@@ -29,8 +28,8 @@ public class BdvSetAlphaViewerSettingsCommand implements BdvPlaygroundActionComm
     @Parameter
     String screenscales = "1, 0.5, 0.25, 0.125";
 
-    @Parameter
-    long targetrenderms = 30;// * 1000000l;
+    //@Parameter
+    //long targetrenderms = 30;// * 1000000l;
 
     @Parameter
     int numrenderingthreads = 3;
@@ -50,9 +49,6 @@ public class BdvSetAlphaViewerSettingsCommand implements BdvPlaygroundActionComm
     @Parameter
     int numtimepoints = 1;
 
-    @Parameter
-    boolean usealphalayer = true;
-
     //@Parameter
     //AxisOrder axisOrder = AxisOrder.DEFAULT;
 
@@ -67,10 +63,10 @@ public class BdvSetAlphaViewerSettingsCommand implements BdvPlaygroundActionComm
     @Override
     public void run() {
         if (resetToDefault) {
-            IBdvSupplier bdvSupplier = new AlphaBdvSupplier(new AlphaSerializableBdvOptions());
+            IBdvSupplier bdvSupplier = new BiopBdvSupplier(new BiopSerializableBdvOptions());
             sacDisplayService.setDefaultBdvSupplier(bdvSupplier);
         } else {
-            AlphaSerializableBdvOptions options = new AlphaSerializableBdvOptions();
+            BiopSerializableBdvOptions options = new BiopSerializableBdvOptions();
             options.frameTitle = frametitle;
             options.is2D = is2d;
             options.numRenderingThreads = numrenderingthreads;
@@ -80,8 +76,7 @@ public class BdvSetAlphaViewerSettingsCommand implements BdvPlaygroundActionComm
             options.numSourceGroups = numsourcegroups;
             options.numTimePoints = numtimepoints;
             options.interpolate = interpolate;
-            options.useAlphaCompositing = usealphalayer;
-            IBdvSupplier bdvSupplier = new AlphaBdvSupplier(options);
+            IBdvSupplier bdvSupplier = new BiopBdvSupplier(options);
             sacDisplayService.setDefaultBdvSupplier(bdvSupplier);
         }
 

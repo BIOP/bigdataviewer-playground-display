@@ -19,7 +19,7 @@ public class BdvSupplierHelper {
         bdvh.getViewerPanel().setTransferHandler(new BdvTransferHandler());
     }
 
-    public static void addEditorMode(BdvHandle bdvh, String pathToBindings) {
+    public static SourceSelectorBehaviour addEditorMode(BdvHandle bdvh, String pathToBindings) {
 
         Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
 
@@ -41,6 +41,7 @@ public class BdvSupplierHelper {
             handler.setTransferableFunction(c -> new SourcesTransferable(ssb.getSelectedSources()));
             ssb.addBehaviour(new DragNDSourcesBehaviour(bdvh), "drag-selected-sources", new String[]{"alt button1"});
         }
+        return ssb;
     }
 
     static class DragNDSourcesBehaviour implements DragBehaviour {
