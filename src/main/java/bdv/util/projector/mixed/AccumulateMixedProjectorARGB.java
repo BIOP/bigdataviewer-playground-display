@@ -154,14 +154,15 @@ public class AccumulateMixedProjectorARGB extends AccumulateProjector< ARGBType,
 				continue;
 			}
 
-			final int argb = accesses[ sourceIndex ].get().get();
+			final int argb = argbs[ sourceIndex ];
 
 			final int a = ARGBType.alpha( argb );
+
+			if ( a == 0 ) continue;
+
 			final int r = ARGBType.red( argb );
 			final int g = ARGBType.green( argb );
 			final int b = ARGBType.blue( argb );
-
-			if ( a == 0 ) continue;
 
 			if ( blendingMode.equals( BlendingMode.Sum ) || blendingMode.equals( BlendingMode.SumOccluding ) )
 			{
