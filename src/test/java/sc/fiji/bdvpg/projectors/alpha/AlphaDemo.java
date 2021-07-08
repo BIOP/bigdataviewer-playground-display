@@ -29,8 +29,6 @@
 package sc.fiji.bdvpg.projectors.alpha;
 
 import bdv.util.BdvHandle;
-import bdv.util.projector.mixed.BlendingMode;
-import bdv.util.projector.mixed.BlendingModeChanger;
 import bdv.viewer.SourceAndConverter;
 import net.imagej.ImageJ;
 import net.imglib2.type.numeric.ARGBType;
@@ -96,11 +94,5 @@ public class AlphaDemo
 
 		// Change color of third one
 		new ColorChanger( sacs.get( 2 ), new ARGBType( ARGBType.rgba( 0, 255, 0, 255 ) ) ).run();
-
-		// For the first two, change the projection mode to avg (default is sum, if it is not set)
-		final SourceAndConverter[] averageBlendingSacs = new SourceAndConverter[ 2 ];
-		averageBlendingSacs[ 0 ] = sacs.get( 0 );
-		averageBlendingSacs[ 1 ] = sacs.get( 1 );
-		new BlendingModeChanger( averageBlendingSacs, BlendingMode.Average, true ).run();
 	}
 }

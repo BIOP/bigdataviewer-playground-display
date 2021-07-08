@@ -2,9 +2,9 @@ package sc.fiji.bdvpg.bdv.supplier.biop;
 
 import bdv.util.AxisOrder;
 import bdv.util.BdvOptions;
-import bdv.util.projector.mixed.AccumulateMixedProjectorARGBFactory;
 import bdv.viewer.render.AccumulateProjectorFactory;
 import net.imglib2.type.numeric.ARGBType;
+import sc.fiji.bdvpg.bdv.projector.DefaultAccumulatorFactory;
 
 public class BiopSerializableBdvOptions {
 
@@ -31,7 +31,7 @@ public class BiopSerializableBdvOptions {
 
     public int numTimePoints = 1;
 
-    public AccumulateProjectorFactory<ARGBType> accumulateProjectorFactory = new AccumulateMixedProjectorARGBFactory();
+    public AccumulateProjectorFactory<ARGBType> accumulateProjectorFactory = new DefaultAccumulatorFactory();
 
     // Not serialized
     //private TransformEventHandlerFactory transformEventHandlerFactory = TransformEventHandler3D::new;
