@@ -38,9 +38,9 @@ public class AlphaDemoWithCustomConverter {
 
         SourceAndConverter<?>[] sources = SourceAndConverterServices.getSourceAndConverterService().getSourceAndConverters().toArray(new SourceAndConverter[0]);
 
-        Source<?> non_volatile_source = sources[6].getSpimSource();
+        Source<?> non_volatile_source = sources[5].getSpimSource();
 
-        Source<?> volatile_source = sources[6].asVolatile().getSpimSource();
+        Source<?> volatile_source = sources[5].asVolatile().getSpimSource();
 
         Converter converter = createConverterRealType((RealType) non_volatile_source.getType());
         SourceAndConverter vsac = new SourceAndConverter(volatile_source, converter);

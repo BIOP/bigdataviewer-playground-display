@@ -84,7 +84,7 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
 
-		<bigdataviewer-playground.version>0.3.5</bigdataviewer-playground.version>
+		<bigdataviewer-playground.version>0.3.7</bigdataviewer-playground.version>
 		<bigdataviewer-spimdata-extras.version>0.1.2</bigdataviewer-spimdata-extras.version>
 		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
 		<bigdataviewer-vistools.version>1.0.0-beta-28</bigdataviewer-vistools.version>
