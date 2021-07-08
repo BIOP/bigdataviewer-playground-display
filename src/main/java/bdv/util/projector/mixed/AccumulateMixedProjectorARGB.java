@@ -38,6 +38,7 @@ import net.imglib2.type.numeric.ARGBType;
 import sc.fiji.bdvpg.services.ISourceAndConverterService;
 import sc.fiji.bdvpg.services.SourceAndConverterServices;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -64,7 +65,8 @@ import java.util.concurrent.ExecutorService;
 public class AccumulateMixedProjectorARGB extends AccumulateProjector< ARGBType, ARGBType >
 {
 	private final BlendingMode[] blendingModes;
-	private final int[] sourceOrder;
+	private static boolean containsOccludingSources = false;
+	private static ArrayList< Integer > occluding;
 
 	public AccumulateMixedProjectorARGB(
 			final List< VolatileProjector > sourceProjectors,
@@ -75,62 +77,42 @@ public class AccumulateMixedProjectorARGB extends AccumulateProjector< ARGBType,
 			final ExecutorService executorService )
 	{
 		super( sourceProjectors, sourceScreenImages, target, numThreads, executorService );
-		this.blendingModes = getBlendingModes( sources );
-		// TODO: remove sourceOrder
-		sourceOrder = getSourcesOrder( blendingModes );
+		blendingModes = getBlendingModes( sources );
+		initOccludingBlendingModes( blendingModes );
 	}
 
-	public static BlendingMode[] getBlendingModes( List< SourceAndConverter<?> > visibleSacs )
+	public static BlendingMode[] getBlendingModes( List< SourceAndConverter<?> > sources )
 	{
 		final ISourceAndConverterService sacService = SourceAndConverterServices.getSourceAndConverterService();
 
-		return visibleSacs.stream()
+		return sources.stream()
 				.map(sac -> sacService.getMetadata( sac, BlendingMode.BLENDING_MODE ) )
 				.map(it -> it==null ? BlendingMode.Sum:it)
 				.toArray( BlendingMode[]::new );
 	}
 
-	// TODO: is this actually necessary??
-	public static int[] getSourcesOrder( BlendingMode[] blendingModes )
+	private static void initOccludingBlendingModes( BlendingMode[] blendingModes )
 	{
-		boolean containsExclusiveBlendingMode = containsOccludingBlendingMode( blendingModes );
+		occluding = new ArrayList();
 
-		final int numSources = blendingModes.length;
-
-		int[] sourceOrder = new int[ numSources ];
-		if ( containsExclusiveBlendingMode )
+		for ( int i = 0; i < blendingModes.length; i++ )
 		{
-			int j = 0;
-
-			// first the exclusive ones
-			for ( int i = 0; i < numSources; i++ )
-				if ( BlendingMode.isOccluding(  blendingModes[ i ] ) )
-					sourceOrder[ j++ ] = i;
-
-			// then the others
-			for ( int i = 0; i < numSources; i++ )
-				if ( ! BlendingMode.isOccluding(  blendingModes[ i ] ) )
-					sourceOrder[ j++ ] = i;
-		}
-		else
-		{
-			for ( int i = 0; i < numSources; i++ )
-				sourceOrder[ i ] = i;
-		}
-
-		return sourceOrder;
-	}
-
-	public static boolean containsOccludingBlendingMode( BlendingMode[] blendingModes )
-	{
-		for ( BlendingMode blendingMode : blendingModes )
-		{
-			if ( BlendingMode.isOccluding( blendingMode ) )
+			if ( BlendingMode.isOccluding( blendingModes[ i ] ) )
 			{
-				return true;
+				occluding.add( i );
+				containsOccludingSources = true;
 			}
 		}
-		return false;
+	}
+
+	public BlendingMode[] getBlendingModes()
+	{
+		return blendingModes;
+	}
+
+	public static boolean isContainsOccludingSources()
+	{
+		return containsOccludingSources;
 	}
 
 	@Override
@@ -138,40 +120,49 @@ public class AccumulateMixedProjectorARGB extends AccumulateProjector< ARGBType,
 			final Cursor< ? extends ARGBType >[] accesses,
 			final ARGBType target )
 	{
-		final int argbIndex = getArgbIndex( accesses, sourceOrder, blendingModes );
+		final int argbIndex = getArgbIndex( accesses, blendingModes );
 		target.set( argbIndex );
 	}
 
-	public static int getArgbIndex( Cursor< ? extends ARGBType >[] accesses, int[] sourceOrder, BlendingMode[] blendingModes )
+	public static int getArgbIndex( Cursor< ? extends ARGBType >[] accesses, BlendingMode[] blendingModes )
 	{
 		int aAvg = 0, rAvg = 0, gAvg = 0, bAvg = 0, numAvg = 0;
 		int aAccu = 0, rAccu = 0, gAccu = 0, bAccu = 0;
+		int occludingAlpha = 0;
 
-		boolean containsOccludingSources = containsOccludingBlendingMode( blendingModes );
+		int[] argbs = new int[ accesses.length ];
 
-		// TODO: get rid of the source order?
-		for ( int sourceIndex : sourceOrder )
+		for ( int sourceIndex = 0; sourceIndex < accesses.length; sourceIndex++ )
+		{
+			argbs[ sourceIndex ] = accesses[ sourceIndex ].get().get();
+		}
+
+		for ( Integer occludingSourceIndex : occluding )
+		{
+			occludingAlpha += ARGBType.alpha( argbs[ occludingSourceIndex ] );
+		}
+
+		for ( int sourceIndex = 0; sourceIndex < accesses.length; sourceIndex++ )
 		{
 			final BlendingMode blendingMode = blendingModes[ sourceIndex ];
 
-			if ( containsOccludingSources )
+			if ( ! BlendingMode.isOccluding( blendingMode ) && occludingAlpha > 0 )
 			{
-				if ( BlendingMode.isOccluding( blendingMode ) )
-				{
-					// non-occluding sources are not considered
-					// if they are occluded by others.
-					continue;
-				}
+				// The source itself is not occluding
+				// and there are occluding sources with an alpha > 0
+				// Thus, do not paint this source
+				continue;
 			}
 
-			final int argb = accesses[ sourceIndex ].get().get();
+			final int argb = argbs[ sourceIndex ];
 
 			final int a = ARGBType.alpha( argb );
+
+			if ( a == 0 ) continue;
+
 			final int r = ARGBType.red( argb );
 			final int g = ARGBType.green( argb );
 			final int b = ARGBType.blue( argb );
-
-			if ( a == 0 ) continue;
 
 			if ( blendingMode.equals( BlendingMode.Sum ) || blendingMode.equals( BlendingMode.SumOccluding ) )
 			{
