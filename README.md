@@ -1,4 +1,4 @@
-[![](https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display.svg?branch=master)](https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display)
+[![](https://github.com/BIOP/bigdataviewer-playground-display/actions/workflows/build-main.yml/badge.svg)](https://github.com/BIOP/bigdataviewer-playground-display/actions/workflows/build-main.yml)
 
 
 ## BigDataViewer Playground Display 
