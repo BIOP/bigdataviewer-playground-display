@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>30.0.0</version>
+		<version>31.1.0</version>
 		<relativePath />
 	</parent>
 
@@ -63,20 +63,20 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/NicoKiaru/bigdataviewer-playground-display</connection>
-		<developerConnection>scm:git:git@github.com:NicoKiaru/bigdataviewer-playground-display</developerConnection>
-		<url>https://github.com/NicoKiaru/bigdataviewer-playground-display</url>
+		<connection>scm:git:git://github.com/BIOP/bigdataviewer-playground-display</connection>
+		<developerConnection>scm:git:git@github.com:BIOP/bigdataviewer-playground-display</developerConnection>
+		<url>https://github.com/BIOP/bigdataviewer-playground-display</url>
 		<tag>HEAD</tag>
 	</scm>
 	
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/NicoKiaru/bigdataviewer-playground-display/issues</url>
+		<url>https://github.com/BIOP/bigdataviewer-playground-display/issues</url>
 	</issueManagement>
 
 	<ciManagement>
 		<system>Travis CI</system>
-		<url>https://travis-ci.com/NicoKiaru/bigdataviewer-playground-display</url>
+		<url>https://travis-ci.com/BIOP/bigdataviewer-playground-display</url>
 	</ciManagement>
 
 	<properties>
@@ -84,12 +84,12 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
 
-		<bigdataviewer-playground.version>0.3.7</bigdataviewer-playground.version>
-		<bigdataviewer-spimdata-extras.version>0.1.2</bigdataviewer-spimdata-extras.version>
-		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
-		<bigdataviewer-vistools.version>1.0.0-beta-28</bigdataviewer-vistools.version>
+		<bigdataviewer-playground.version>0.3.10</bigdataviewer-playground.version>
+		<bigdataviewer-spimdata-extras.version>0.1.4</bigdataviewer-spimdata-extras.version>
+		<bigdataviewer-core.version>10.2.1</bigdataviewer-core.version>
+		<bigdataviewer-vistools.version>1.0.0-beta-29</bigdataviewer-vistools.version>
 		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
-		<bigwarp_fiji.version>7.0.1</bigwarp_fiji.version>
+		<bigwarp_fiji.version>7.0.2</bigwarp_fiji.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
