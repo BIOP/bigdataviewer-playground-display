@@ -92,7 +92,7 @@
 		<bigwarp_fiji.version>7.0.2</bigwarp_fiji.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
-		<releaseProfiles>deploy-to-scijava</releaseProfiles>
+		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
 	</properties>
 
 	<repositories>
