@@ -75,8 +75,8 @@
 	</issueManagement>
 
 	<ciManagement>
-		<system>Travis CI</system>
-		<url>https://travis-ci.com/BIOP/bigdataviewer-playground-display</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/BIOP/bigdataviewer-playground-display/actions</url>
 	</ciManagement>
 
 	<properties>
