@@ -36,6 +36,9 @@ public class SourcesBlenderResamplerCommand implements BdvPlaygroundActionComman
     @Parameter
     int cacheX = 64, cacheY=64, cacheZ=64;
 
+    @Parameter
+    int nThreads = 4;
+
     @Parameter(label="Name of the blended resampled source")
     String name; // CSV separate for multiple sources
 
@@ -51,7 +54,7 @@ public class SourcesBlenderResamplerCommand implements BdvPlaygroundActionComman
         System.out.println("Starting");
         List<SourceAndConverter> sacs_list = Arrays.asList(sacs);
         System.out.println("Middle");
-        sac_out = new SourceBlenderResampler(sacs_list, blendingMode,  model, name, reusemipmaps, cache, interpolate, defaultmipmaplevel, cacheX, cacheY, cacheZ).get();
+        sac_out = new SourceBlenderResampler(sacs_list, blendingMode,  model, name, reusemipmaps, cache, interpolate, defaultmipmaplevel, cacheX, cacheY, cacheZ, nThreads).get();
         System.out.println("Done.");
     }
 

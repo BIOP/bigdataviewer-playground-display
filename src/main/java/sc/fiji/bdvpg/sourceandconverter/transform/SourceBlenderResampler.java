@@ -2,6 +2,7 @@ package sc.fiji.bdvpg.sourceandconverter.transform;
 
 import bdv.util.VolatileSource;
 import bdv.util.source.blended.AlphaBlendedResampledSource;
+import bdv.util.volatiles.SharedQueue;
 import bdv.viewer.Interpolation;
 import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
@@ -27,6 +28,7 @@ public class SourceBlenderResampler implements Runnable, Function<List<SourceAnd
     boolean interpolate;
 
     boolean cache;
+
     int cacheX, cacheY, cacheZ;
 
     int defaultMipMapLevel;
@@ -34,6 +36,8 @@ public class SourceBlenderResampler implements Runnable, Function<List<SourceAnd
     private String name;
 
     String blendingMode;
+
+    private int nThreads = 4;
 
     public SourceBlenderResampler( List<SourceAndConverter> sacs_in,
                                    String blendingMode,
@@ -43,7 +47,9 @@ public class SourceBlenderResampler implements Runnable, Function<List<SourceAnd
                                    boolean cache,
                                    boolean interpolate,
                                    int defaultMipMapLevel,
-                                   int cacheX, int cacheY, int cacheZ) {
+                                   int cacheX, int cacheY, int cacheZ,
+                                   int nThreads ) {
+        this.nThreads = nThreads;
         this.blendingMode = blendingMode;
         this.name = name;
         this.reuseMipMaps = reuseMipmaps;
@@ -98,7 +104,7 @@ public class SourceBlenderResampler implements Runnable, Function<List<SourceAnd
             SourceAndConverter vsac;
             Source vsrcRsampled;
             if (cache) {
-                vsrcRsampled = new VolatileSource(srcRsampled);
+                vsrcRsampled = new VolatileSource(srcRsampled, new SharedQueue(nThreads));
             } else {
 
                 sources = new ArrayList<>();
