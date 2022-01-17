@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.util.function.Supplier;
 
-public class SumAlphaBlended3DRandomAccess<T extends NumericType<T>> implements RandomAccess<T> {
+public class SumAlphaBlended3DRandomAccess<T extends NumericType<T>> implements SubSetBlendedRandomAccess<T> {
 
     long[] position = new long[3];
     final int nRandomAccesses;
@@ -47,6 +47,38 @@ public class SumAlphaBlended3DRandomAccess<T extends NumericType<T>> implements 
         this.pixelSupplier = pixelSupplier;
         pixel = pixelSupplier.get();
         alpha = new FloatType();
+    }
+
+    public SumAlphaBlended3DRandomAccess(SumAlphaBlended3DRandomAccess<T> randomAccess, boolean[] subset) {
+        int nRandomAccesses = 0;
+        for (int i = 0; i<subset.length; i++) {
+            if (subset[i]) nRandomAccesses++;
+        }
+
+        //System.out.println(nRandomAccesses+"/"+randomAccess.nRandomAccesses);
+
+        this.nRandomAccesses = nRandomAccesses;//randomAccess.nRandomAccesses;
+        ra_origins = new RandomAccess[nRandomAccesses];
+        ra_origins_alpha = new RandomAccess[nRandomAccesses];
+        this.pixelSupplier = randomAccess.pixelSupplier;
+        pixel = pixelSupplier.get();
+        alpha = new FloatType();
+
+        // necessary ?
+        position[0] = randomAccess.getLongPosition(0);
+        position[1] = randomAccess.getLongPosition(1);
+        position[2] = randomAccess.getLongPosition(2);
+
+        int iSource = 0;
+        for (int i=0; i<subset.length; i++) {
+            if (subset[i]) {
+                ra_origins[iSource] = randomAccess.ra_origins[i].copyRandomAccess();
+                ra_origins_alpha[iSource] = randomAccess.ra_origins_alpha[i].copyRandomAccess();
+                ra_origins[iSource].setPosition(position);
+                ra_origins_alpha[iSource].setPosition(position);
+                iSource++;
+            }
+        }
     }
 
     @Override
@@ -187,23 +219,22 @@ public class SumAlphaBlended3DRandomAccess<T extends NumericType<T>> implements 
     @Override
     public T get() {
         pixel.setZero();
-        //alpha.setZero();
-        //float sum_alpha = 0;
         for (int i=0; i<nRandomAccesses; i++) {
-            //ra_origins[i].setPosition(position, d);
-            //ra_origins_alpha[i].setPosition(position, d);
             float alpha_v=ra_origins_alpha[i].get().get();
             if (alpha_v!=0) {
                 pixel.add(ra_origins[i].get());
-                //sum_alpha+=alpha_v;
             }
         }
-        //pixel.mul(1./sum_alpha);
         return pixel;
     }
 
     @Override
     public SumAlphaBlended3DRandomAccess<T> copy() {
        return new SumAlphaBlended3DRandomAccess<T>(this);
+    }
+
+    @Override
+    public RandomAccess<T> copy(boolean[] subset) {
+        return new SumAlphaBlended3DRandomAccess<T>(this, subset);
     }
 }

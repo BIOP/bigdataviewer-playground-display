@@ -3,10 +3,7 @@ package bdv.util.source.alpha;
 import bdv.img.WarpedSource;
 import bdv.viewer.Interpolation;
 import bdv.viewer.Source;
-import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealRandomAccessible;
+import net.imglib2.*;
 import net.imglib2.position.FunctionRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.realtransform.RealTransformRealRandomAccessible;
@@ -67,5 +64,11 @@ public class AlphaSourceWarped extends AlphaSource {
         } else {
             return sourceRealAccessible;
         }
+    }
+
+    @Override
+    public boolean intersectBox(AffineTransform3D affineTransform, Interval cell, int timepoint) {
+        // How to do better ? We know nothing about the warping
+        return true;
     }
 }

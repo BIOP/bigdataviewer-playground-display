@@ -3,20 +3,28 @@ package bdv.util.source.blended;
 import bdv.img.WarpedSource;
 import bdv.tools.transformation.TransformedSource;
 import bdv.util.DefaultInterpolators;
+import net.imglib2.RandomAccess;
 import bdv.util.RAIHelper;
 import bdv.util.source.alpha.AlphaSource;
 import bdv.util.source.alpha.AlphaSourceHelper;
 import bdv.util.source.alpha.IAlphaSource;
 import bdv.viewer.Interpolation;
 import bdv.viewer.Source;
+import loci.formats.IFormatReader;
 import mpicbg.spim.data.sequence.VoxelDimensions;
+import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
+import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
+import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
+import net.imglib2.img.Img;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
@@ -27,6 +35,7 @@ import sc.fiji.bdvpg.sourceandconverter.SourceAndConverterHelper;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  *
@@ -128,6 +137,8 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
                                        int cacheX,
                                        int cacheY,
                                        int cacheZ) {
+        final T t = origins.stream().findAny().get().getType().createVariable();
+        this.pixelCreator = t::createVariable;
         this.blendingMode = blendingMode;
         this.origins=origins;
         this.resamplingModel=resamplingModel;
@@ -147,7 +158,9 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
 
     Map<Source<T>,Map<Integer, Integer>> mipmapModelToOrigin = new HashMap<>();
 
-    Map<Source<T>,List<Double>> originVoxSize = new HashMap<>();
+    Map<Source<T>, List<Double>> originVoxSize = new HashMap<>();
+
+    final Supplier<T> pixelCreator;
 
     private void getAlpha(Source<T> origin) {
         originsAlpha.put(origin, (IAlphaSource) AlphaSourceHelper.getOrBuildAlphaSource(origin).getSpimSource());
@@ -244,6 +257,10 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
 
     @Override
     public RandomAccessibleInterval<T> getSource(int t, int level) {
+
+        long sx = resamplingModel.getSource(t,level).dimension(0);//-1;
+        long sy = resamplingModel.getSource(t,level).dimension(1);//-1;
+        long sz = resamplingModel.getSource(t,level).dimension(2);//-1;
         if (cache) {
             if (!cachedRAIs.containsKey(t)) {
                 cachedRAIs.put(t, new ConcurrentHashMap<>());
@@ -251,39 +268,70 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
 
             if (!cachedRAIs.get(t).containsKey(level)) {
                 if (cache) {
-                    RandomAccessibleInterval<T> nonCached = buildSource(t, level);
+                    final AlphaBlended3DRandomAccessible<T> nonCached = buildSource(t, level);
 
                     int[] blockSize = {cacheX, cacheY, cacheZ};
 
-                    if (nonCached.dimension(0) < cacheX) blockSize[0] = (int) nonCached.dimension(0);
-                    if (nonCached.dimension(1) < cacheY) blockSize[1] = (int) nonCached.dimension(1);
-                    if (nonCached.dimension(2) < cacheZ) blockSize[2] = (int) nonCached.dimension(2);
+                    ReadOnlyCachedCellImgOptions cacheOptions = ReadOnlyCachedCellImgOptions
+                            .options()
+                            .cacheType(DiskCachedCellImgOptions.CacheType.SOFTREF)
+                            .cellDimensions(blockSize);
 
-                    cachedRAIs.get(t).put(level, RAIHelper.wrapAsVolatileCachedCellImg(nonCached, blockSize));
+                    final ReadOnlyCachedCellImgFactory factory = new ReadOnlyCachedCellImgFactory( cacheOptions );
+
+                    List<IAlphaSource> iteratedAlphaSources = new ArrayList<>();
+
+                    for (Source<T> origin: origins) {
+                        if (origin.isPresent(t)) {
+                            iteratedAlphaSources.add(originsAlpha.get(origin));
+                        }
+                    }
+
+                    final IAlphaSource[] arrayAlphaSources = iteratedAlphaSources.toArray(new IAlphaSource[0]);
+                    final int nSources = arrayAlphaSources.length;
+                    final AffineTransform3D affineTransform = new AffineTransform3D();
+                    getSourceTransform(t,level,affineTransform);
+
+                    final Img<T> rai = factory.create(new long[]{sx, sy, sz}, pixelCreator.get(),
+                            cell -> {
+                                // TODO : improve by discarding some sources which are not in the cell
+                                boolean[] sourcesPresentInCell = new boolean[nSources];
+                                for (int i=0;i<nSources;i++) {
+                                    IAlphaSource alpha = arrayAlphaSources[i];
+                                    if (!alpha.doBoundingBoxCulling()) {
+                                        sourcesPresentInCell[i] = true;
+                                    } else {
+                                        sourcesPresentInCell[i] = alpha.intersectBox(affineTransform.copy(), cell, t);
+                                    }
+                                }
+
+                                RandomAccess<T> nonCachedAccess = nonCached.randomAccess(sourcesPresentInCell);
+                                Cursor<T> out = Views.flatIterable(cell).cursor();
+                                T t_in;
+                                while (out.hasNext()) {
+                                    t_in = out.next();
+                                    nonCachedAccess.setPosition(out);
+                                    t_in.set(nonCachedAccess.get());
+                                }
+                            });
+
+                    cachedRAIs.get(t).put(level, rai);
                 } else {
-                    cachedRAIs.get(t).put(level,buildSource(t, level));
+                    cachedRAIs.get(t).put(level,Views.interval(buildSource(t,level), new long[]{0, 0, 0}, new long[]{sx, sy, sz}));
                 }
             }
             return cachedRAIs.get(t).get(level);
         } else {
-            return buildSource(t,level);
+            return Views.interval(buildSource(t,level), new long[]{0, 0, 0}, new long[]{sx, sy, sz});
         }
 
     }
 
-    public RandomAccessibleInterval<T> buildSource(int t, int level) {
+    public AlphaBlended3DRandomAccessible<T> buildSource(int t, int level) {
         // Get current model source transformation
         AffineTransform3D at_ori = new AffineTransform3D();
         resamplingModel.getSourceTransform(t,level,at_ori);
         at_ori = at_ori.inverse();
-
-        //int mipmap = getModelToOriginMipMapLevel(level);
-
-        // Get bounds of model source RAI
-        // TODO check if -1 is necessary
-        long sx = resamplingModel.getSource(t,level).dimension(0)-1;
-        long sy = resamplingModel.getSource(t,level).dimension(1)-1;
-        long sz = resamplingModel.getSource(t,level).dimension(2)-1;
 
         List<RandomAccessible<T>> presentSources = new ArrayList<>();
         List<RandomAccessible<FloatType>> presentSourcesAlpha = new ArrayList<>();
@@ -314,13 +362,10 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
             }
         }
 
-        AlphaBlended3DRandomAccessible<T> ra = new AlphaBlended3DRandomAccessible<>(blendingMode, presentSources, presentSourcesAlpha, this::getType);
-
-        // ... interval
-        RandomAccessibleInterval<T> view =
-                Views.interval(ra, new long[]{0, 0, 0}, new long[]{sx, sy, sz}); //Sets the interval
-
-        return view;
+        return new AlphaBlended3DRandomAccessible<>(blendingMode,
+                presentSources.toArray(new RandomAccessible[0]),
+                presentSourcesAlpha.toArray(new RandomAccessible[0]),
+                this::getType);
     }
 
 
@@ -341,7 +386,7 @@ public class AlphaBlendedResampledSource< T extends NumericType<T> & NativeType<
 
     @Override
     public T getType() {
-        return origins.stream().findAny().get().getType().createVariable();
+        return pixelCreator.get();//origins.stream().findAny().get().getType().createVariable();
     }
 
     @Override
