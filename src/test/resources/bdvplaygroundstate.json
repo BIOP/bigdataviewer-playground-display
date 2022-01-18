@@ -160,6 +160,7 @@
     "converter_setup_max": 80.0,
     "sac": {
       "type": "ResampledSource",
+      "name": "mri-stack_ResampledAs_UpSampled",
       "interpolate": "NLINEAR",
       "cache": false,
       "mipmaps_reused": false,
@@ -179,6 +180,7 @@
     "converter_setup_max": 80.0,
     "sac": {
       "type": "ResampledSource",
+      "name": "mri-stack_ResampledAs_DownSampled",
       "interpolate": "NLINEAR",
       "cache": false,
       "mipmaps_reused": false,
@@ -679,6 +681,7 @@
     "converter_setup_max": 800.0,
     "sac": {
       "type": "ResampledSource",
+      "name": "Mandelbrot Set_ResampledAs_mri-stack",
       "interpolate": "NEARESTNEIGHBOR",
       "cache": false,
       "mipmaps_reused": false,
@@ -880,6 +883,7 @@
     "converter_setup_max": 80.0,
     "sac": {
       "type": "ResampledSource",
+      "name": "mri-stack_ResampledAs_DownSampled",
       "interpolate": "NLINEAR",
       "cache": false,
       "mipmaps_reused": true,
