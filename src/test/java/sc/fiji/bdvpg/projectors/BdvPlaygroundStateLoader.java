@@ -42,6 +42,7 @@ public class BdvPlaygroundStateLoader {
     {
         ij = new ImageJ();
         ij.ui().showUI();
+
         new SourceAndConverterServiceLoader("src/test/resources/bdvplaygroundstate.json", "src/test/resources/", ij.context(), false).run();
     }
 
