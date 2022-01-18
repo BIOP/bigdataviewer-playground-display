@@ -3,9 +3,8 @@
 
 ## BigDataViewer Playground Display 
 
-This repository contains display extensions for bigdataviewer-playground.
-Metadata for display options as well as custom sc.fiji.bdvpg.projectors which are using alpha compositing are included in this repository.
+This repository contains display extensibility mechanisms for bigdataviewer-playground.
+Metadata for display options as well as custom sc.fiji.bdvpg.projectors 
+are included in this repository.
 
 
-
-![Demo of alpha channels and composition](DemoAlphaLayers.gif)
