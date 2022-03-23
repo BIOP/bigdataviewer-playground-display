@@ -63,7 +63,7 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/BIOP/bigdataviewer-playground-display</connection>
+		<connection>scm:git:https://github.com/BIOP/bigdataviewer-playground-display</connection>
 		<developerConnection>scm:git:git@github.com:BIOP/bigdataviewer-playground-display</developerConnection>
 		<url>https://github.com/BIOP/bigdataviewer-playground-display</url>
 		<tag>HEAD</tag>
