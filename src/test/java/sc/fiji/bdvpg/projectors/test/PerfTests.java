@@ -1,10 +1,7 @@
 package sc.fiji.bdvpg.projectors.test;
 
 import bdv.util.*;
-import sc.fiji.bdvpg.projectors.test.BlackProjectorFactory;
-import sc.fiji.bdvpg.projectors.test.DefaultProjectorFactory;
-import sc.fiji.bdvpg.projectors.test.SlowProjectorFactory;
-import sc.fiji.bdvpg.projectors.test.TakeFirstProjectorFactory;
+import bdv.viewer.render.AccumulateProjectorARGB;
 import bdv.viewer.render.AccumulateProjectorFactory;
 import net.imglib2.type.numeric.ARGBType;
 
@@ -44,17 +41,17 @@ public class PerfTests {
 
     public static void main(final String... args) {
 
-        test(new DefaultProjectorFactory(), BdvSampleDatasets::oneImage);
+        test(AccumulateProjectorARGB.factory, BdvSampleDatasets::oneImage);
         test(new SlowProjectorFactory(), BdvSampleDatasets::oneImage);
         test(new TakeFirstProjectorFactory(), BdvSampleDatasets::oneImage);
         test(new BlackProjectorFactory(), BdvSampleDatasets::oneImage);
 
-        test(new DefaultProjectorFactory(), BdvSampleDatasets::twoImages);
+        test(AccumulateProjectorARGB.factory, BdvSampleDatasets::twoImages);
         test(new SlowProjectorFactory(), BdvSampleDatasets::twoImages);
         test(new TakeFirstProjectorFactory(), BdvSampleDatasets::twoImages);
         test(new BlackProjectorFactory(), BdvSampleDatasets::twoImages);
 
-        test(new DefaultProjectorFactory(), BdvSampleDatasets::twentyFiveImages);
+        test(AccumulateProjectorARGB.factory, BdvSampleDatasets::twentyFiveImages);
         test(new SlowProjectorFactory(), BdvSampleDatasets::twentyFiveImages);
         test(new TakeFirstProjectorFactory(), BdvSampleDatasets::twentyFiveImages); // Surprisingly slow : the projector does not care so much about how many sources it projects
         test(new BlackProjectorFactory(), BdvSampleDatasets::twentyFiveImages); // Surprisingly slow : the projector does not care so much about how many sources it projects

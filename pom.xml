@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>31.1.0</version>
+		<version>32.0.0-beta-4</version>
 		<relativePath />
 	</parent>
 
 	<groupId>sc.fiji.bigdataviewer</groupId>
 	<artifactId>bigdataviewer-playground-display</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.1-SNAPSHOT-10.4.1</version>
 
 	<name>BigDataViewer Playground Display</name>
 	<description>Display (metadata and projectors) for BigDataViewer Playground.</description>
@@ -84,12 +84,13 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
 
-		<bigdataviewer-playground.version>0.4.1</bigdataviewer-playground.version>
-		<bigdataviewer-spimdata-extras.version>0.1.6</bigdataviewer-spimdata-extras.version>
-		<bigdataviewer-core.version>10.2.2</bigdataviewer-core.version>
-		<bigdataviewer-vistools.version>1.0.0-beta-29</bigdataviewer-vistools.version>
+		<bigdataviewer-playground.version>0.5.2-SNAPSHOT-10.4.1</bigdataviewer-playground.version>
+		<bigdataviewer-spimdata-extras.version>0.1.7-SNAPSHOT-10.4.1</bigdataviewer-spimdata-extras.version>
+		<bigdataviewer-core.version>10.4.1</bigdataviewer-core.version>
+		<bigdataviewer-vistools.version>1.0.0-beta-30</bigdataviewer-vistools.version>
 		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
 		<bigwarp_fiji.version>7.0.5</bigwarp_fiji.version>
+		<ui-behaviour.version>2.0.6</ui-behaviour.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
@@ -103,6 +104,10 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>ui-behaviour</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej</artifactId>

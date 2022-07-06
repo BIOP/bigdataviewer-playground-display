@@ -32,7 +32,10 @@ import net.imagej.ImageJ;
 import org.junit.After;
 import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
+import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
+import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
 import sc.fiji.bdvpg.services.SourceAndConverterServiceLoader;
+import sc.fiji.bdvpg.services.SourceAndConverterServices;
 
 public class BdvPlaygroundStateLoader {
 
@@ -44,6 +47,9 @@ public class BdvPlaygroundStateLoader {
         ij.ui().showUI();
 
         new SourceAndConverterServiceLoader("src/test/resources/bdvplaygroundstate.json", "src/test/resources/", ij.context(), false).run();
+        SourceAndConverterServices
+                .getBdvDisplayService()
+                .setDefaultBdvSupplier(new BiopBdvSupplier(new BiopSerializableBdvOptions()));
     }
 
     @Test
