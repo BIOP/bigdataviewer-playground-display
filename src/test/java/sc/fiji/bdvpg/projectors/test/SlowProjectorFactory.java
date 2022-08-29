@@ -40,14 +40,14 @@ public class SlowProjectorFactory implements AccumulateProjectorFactory<ARGBType
             super( sourceProjectors, sources, target );
         }
 
-        AtomicInteger sheep_counter = new AtomicInteger();
+        final AtomicInteger sheep_counter = new AtomicInteger();
 
         @Override
         protected void accumulate(final Cursor< ? extends ARGBType >[] accesses, final ARGBType target )
         {
             int aSum = 0, rSum = 0, gSum = 0, bSum = 0;
 
-            // Counting sheeps
+            // Counting sheep
             for (int i=0;i<50;i++) {
                 sheep_counter.incrementAndGet();
             }

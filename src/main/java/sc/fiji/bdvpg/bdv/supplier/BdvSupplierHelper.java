@@ -25,7 +25,7 @@ public class BdvSupplierHelper {
 
         // Adds selection mode triggered by E
 
-        // Setup a source selection mode with a trigger input key that toggles it on and off
+        // Set up a source selection mode with a trigger input key that toggles it on and off
         SourceSelectorBehaviour ssb = new SourceSelectorBehaviour(bdvh, "E");
 
         // Stores the associated selector to the display

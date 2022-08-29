@@ -8,6 +8,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.real.FloatType;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -56,7 +57,7 @@ public class AlphaProjectorFactory implements AccumulateProjectorFactory<ARGBTyp
 
             // Let's sort which sources are alpha, which are not, and which contain alpha channels, actually present in the projector
             for (int index_source=0; index_source<sources.size(); index_source++) {
-                SourceAndConverter source = sources.get(index_source);
+                SourceAndConverter<?> source = sources.get(index_source);
                 int index_alpha_source;
                 if (meta.isAlphaSource(source)) {
                     is_alpha[index_source] = true;
@@ -127,9 +128,9 @@ public class AlphaProjectorFactory implements AccumulateProjectorFactory<ARGBTyp
     }
 
     public interface SourcesMetadata {
-        boolean isAlphaSource(SourceAndConverter sac);
-        boolean hasAlphaSource(SourceAndConverter sac);
-        SourceAndConverter getAlphaSource(SourceAndConverter sac);
+        boolean isAlphaSource(SourceAndConverter<?> sac);
+        boolean hasAlphaSource(SourceAndConverter<?> sac);
+        SourceAndConverter<FloatType> getAlphaSource(SourceAndConverter<?> sac);
     }
 
 }

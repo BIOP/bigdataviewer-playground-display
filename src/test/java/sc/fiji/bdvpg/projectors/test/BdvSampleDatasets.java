@@ -25,9 +25,7 @@ public class BdvSampleDatasets {
         List<BdvStackSource<?>> stackSources = BdvFunctions.show(spimData, options);
         stackSources.get(0).setDisplayRange(0,255);
 
-        BdvHandle bdvh = stackSources.get(0).getBdvHandle(); // Get current bdv window
-
-        return bdvh;
+        return stackSources.get(0).getBdvHandle(); // Get current bdv window
     }
 
     /**

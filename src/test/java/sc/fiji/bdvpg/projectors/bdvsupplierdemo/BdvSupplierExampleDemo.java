@@ -43,7 +43,7 @@ public class BdvSupplierExampleDemo {
         sacs.forEach( sac -> {
             SourceAndConverterServices.getBdvDisplayService().show(bdv, sac);
             new ViewerTransformAdjuster(bdv, sac).run();
-            new BrightnessAutoAdjuster(sac, 0).run();
+            new BrightnessAutoAdjuster<>(sac, 0).run();
         });
 
         // Change color of third one

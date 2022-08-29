@@ -20,7 +20,7 @@ import java.util.function.Function;
  * - default sum projector
  * - a slow one (made slow on purpose)
  * - one which ignores all sources except one
- * - one which ignoes all sources and display black
+ * - one which ignores all sources and display black
  *
  * Weirdly, the last two sc.fiji.bdvpg.projectors which are ignoring sources are not much faster than those who display everything
  *
@@ -32,12 +32,12 @@ public class PerfTests {
     /**
      * Do you want to measure the perf ? Meaning rendering a few images offscreen and measuring the time it takes
      */
-    public static boolean testPerf = true;
+    final public static boolean testPerf = true;
 
     /**
      * Close the bdv frame after testing ?
      */
-    public static boolean closeAfterTest = true;
+    final public static boolean closeAfterTest = true;
 
     public static void main(final String... args) {
 
@@ -62,7 +62,6 @@ public class PerfTests {
         BdvOptions options = BdvOptions.options().accumulateProjectorFactory(accumulator);
         BdvHandle bdvh = dataprovider.apply(options);
         if (testPerf) System.out.print(BdvProbeFPS.getStdMsPerFrame(bdvh)+" ms per frame");
-        System.out.println("");
         if (closeAfterTest) bdvh.close();
     }
 

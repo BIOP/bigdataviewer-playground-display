@@ -9,6 +9,7 @@ import sc.fiji.bdvpg.scijava.services.SourceAndConverterBdvDisplayService;
 
 import java.util.Arrays;
 
+@SuppressWarnings({"CanBeFinal","Unused"})
 @Plugin(type = BdvPlaygroundActionCommand.class, menuPath = ScijavaBdvDefaults.RootMenu+"BDV>BDV - Set BDV window (biop)",
         description = "Set preferences of Bdv Window (Biop)")
 public class BdvSetBiopViewerSettingsCommand implements BdvPlaygroundActionCommand{
