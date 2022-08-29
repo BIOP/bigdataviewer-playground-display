@@ -1,6 +1,5 @@
 package sc.fiji.bdvpg.bdv.supplier.biop;
 
-import org.scijava.Context;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
@@ -26,9 +25,6 @@ public class BdvSetBiopViewerSettingsCommand implements BdvPlaygroundActionComma
     @Parameter
     String screenscales = "1, 0.5, 0.25, 0.125";
 
-    //@Parameter
-    //long targetrenderms = 30;// * 1000000l;
-
     @Parameter
     int numrenderingthreads = 3;
 
@@ -46,14 +42,6 @@ public class BdvSetBiopViewerSettingsCommand implements BdvPlaygroundActionComma
 
     @Parameter
     int numtimepoints = 1;
-
-    //@Parameter
-    //AxisOrder axisOrder = AxisOrder.DEFAULT;
-
-    //AccumulateProjectorFactory<ARGBType> accumulateProjectorFactory = new DefaultAccumulatorFactory();
-
-    @Parameter
-    Context ctx;
 
     @Parameter
     SourceAndConverterBdvDisplayService sacDisplayService;

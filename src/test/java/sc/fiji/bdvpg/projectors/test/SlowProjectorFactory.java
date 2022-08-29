@@ -27,7 +27,7 @@ public class SlowProjectorFactory implements AccumulateProjectorFactory<ARGBType
             final int numThreads,
             final ExecutorService executorService )
     {
-        return new AccumulateProjectorARGBGeneric( sourceProjectors, sourceScreenImages, targetScreenImage, numThreads, executorService );
+        return new AccumulateProjectorARGBGeneric( sourceProjectors, sourceScreenImages, targetScreenImage );
     }
 
     public static class AccumulateProjectorARGBGeneric extends AccumulateProjector< ARGBType, ARGBType >
@@ -35,11 +35,9 @@ public class SlowProjectorFactory implements AccumulateProjectorFactory<ARGBType
         public AccumulateProjectorARGBGeneric(
                 final List< VolatileProjector > sourceProjectors,
                 final List< ? extends RandomAccessible< ? extends ARGBType > > sources,
-                final RandomAccessibleInterval< ARGBType > target,
-                final int numThreads,
-                final ExecutorService executorService )
+                final RandomAccessibleInterval< ARGBType > target )
         {
-            super( sourceProjectors, sources, target, numThreads, executorService );
+            super( sourceProjectors, sources, target );
         }
 
         AtomicInteger sheep_counter = new AtomicInteger();

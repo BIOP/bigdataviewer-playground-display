@@ -33,11 +33,6 @@ public class BiopSerializableBdvOptions {
 
     public AccumulateProjectorFactory<ARGBType> accumulateProjectorFactory = AccumulateProjectorARGB.factory;
 
-    // Not serialized
-    //private TransformEventHandlerFactory transformEventHandlerFactory = TransformEventHandler3D::new;
-    //private InputTriggerConfig inputTriggerConfig = null;
-    //private final AffineTransform3D sourceTransform = new AffineTransform3D();
-
     public BdvOptions getBdvOptions() {
         BdvOptions o =
                 BdvOptions.options()
