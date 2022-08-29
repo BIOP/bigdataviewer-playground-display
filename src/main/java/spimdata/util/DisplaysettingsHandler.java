@@ -25,12 +25,12 @@ public class DisplaysettingsHandler implements EntityHandler {
     }
 
     @Override
-    public boolean loadEntity(AbstractSpimData spimData, BasicViewSetup viewSetup) {
+    public boolean loadEntity(AbstractSpimData<?> spimData, BasicViewSetup viewSetup) {
         return false;
     }
 
     @Override
-    public boolean loadEntity(AbstractSpimData spimData, BasicViewSetup viewSetup, SourceAndConverter<?> sac) {
+    public boolean loadEntity(AbstractSpimData<?> spimData, BasicViewSetup viewSetup, SourceAndConverter<?> sac) {
         Displaysettings displaysettings = viewSetup.getAttribute(Displaysettings.class);
         Displaysettings.applyDisplaysettings(sac, displaysettings);
         return true;
