@@ -26,6 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+
 package sc.fiji.bdvpg.projectors;
 
 import net.imagej.ImageJ;
@@ -39,26 +40,26 @@ import sc.fiji.bdvpg.services.SourceAndConverterServices;
 
 public class BdvPlaygroundStateLoader {
 
-    static ImageJ ij;
+	static ImageJ ij;
 
-    public static void main( String[] args )
-    {
-        ij = new ImageJ();
-        ij.ui().showUI();
+	public static void main(String[] args) {
+		ij = new ImageJ();
+		ij.ui().showUI();
 
-        new SourceAndConverterServiceLoader("src/test/resources/bdvplaygroundstate.json", "src/test/resources/", ij.context(), false).run();
-        SourceAndConverterServices
-                .getBdvDisplayService()
-                .setDefaultBdvSupplier(new BiopBdvSupplier(new BiopSerializableBdvOptions()));
-    }
+		new SourceAndConverterServiceLoader(
+			"src/test/resources/bdvplaygroundstate.json", "src/test/resources/", ij
+				.context(), false).run();
+		SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(
+			new BiopBdvSupplier(new BiopSerializableBdvOptions()));
+	}
 
-    @Test
-    public void demoRunOk() {
-        main(new String[]{""});
-    }
+	@Test
+	public void demoRunOk() {
+		main(new String[] { "" });
+	}
 
-    @After
-    public void closeFiji() {
-        TestHelper.closeFijiAndBdvs(ij);
-    }
+	@After
+	public void closeFiji() {
+		TestHelper.closeFijiAndBdvs(ij);
+	}
 }

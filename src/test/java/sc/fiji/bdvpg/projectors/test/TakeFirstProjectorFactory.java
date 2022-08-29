@@ -1,3 +1,4 @@
+
 package sc.fiji.bdvpg.projectors.test;
 
 import bdv.viewer.SourceAndConverter;
@@ -12,45 +13,49 @@ import net.imglib2.type.numeric.ARGBType;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class TakeFirstProjectorFactory implements AccumulateProjectorFactory<ARGBType> {
+public class TakeFirstProjectorFactory implements
+	AccumulateProjectorFactory<ARGBType>
+{
 
-    public TakeFirstProjectorFactory() {
-        System.out.print(this.getClass()+"\t");
-    }
+	public TakeFirstProjectorFactory() {
+		System.out.print(this.getClass() + "\t");
+	}
 
-    public VolatileProjector createProjector(
-            final List< VolatileProjector > sourceProjectors,
-            final List<SourceAndConverter< ? >> sources,
-            final List<? extends RandomAccessible<? extends ARGBType>> sourceScreenImages,
-            final RandomAccessibleInterval<ARGBType> targetScreenImage,
-            final int numThreads,
-            final ExecutorService executorService )
-    {
-        return new AccumulateProjectorARGBGeneric( sourceProjectors, sourceScreenImages, targetScreenImage );
-    }
+	public VolatileProjector createProjector(
+		final List<VolatileProjector> sourceProjectors,
+		final List<SourceAndConverter<?>> sources,
+		final List<? extends RandomAccessible<? extends ARGBType>> sourceScreenImages,
+		final RandomAccessibleInterval<ARGBType> targetScreenImage,
+		final int numThreads, final ExecutorService executorService)
+	{
+		return new AccumulateProjectorARGBGeneric(sourceProjectors,
+			sourceScreenImages, targetScreenImage);
+	}
 
-    public static class AccumulateProjectorARGBGeneric extends AccumulateProjector< ARGBType, ARGBType >
-    {
-        public AccumulateProjectorARGBGeneric(
-                final List< VolatileProjector > sourceProjectors,
-                final List< ? extends RandomAccessible< ? extends ARGBType > > sources,
-                final RandomAccessibleInterval< ARGBType > target )
-        {
-            super( sourceProjectors, sources, target );
-        }
+	public static class AccumulateProjectorARGBGeneric extends
+		AccumulateProjector<ARGBType, ARGBType>
+	{
 
-        @Override
-        protected void accumulate(final Cursor< ? extends ARGBType >[] accesses, final ARGBType target )
-        {
+		public AccumulateProjectorARGBGeneric(
+			final List<VolatileProjector> sourceProjectors,
+			final List<? extends RandomAccessible<? extends ARGBType>> sources,
+			final RandomAccessibleInterval<ARGBType> target)
+		{
+			super(sourceProjectors, sources, target);
+		}
 
-            final int value = accesses[0].get().get();
-            final int a = ARGBType.alpha( value );
-            final int r = ARGBType.red( value );
-            final int g = ARGBType.green( value );
-            final int b = ARGBType.blue( value );
+		@Override
+		protected void accumulate(final Cursor<? extends ARGBType>[] accesses,
+			final ARGBType target)
+		{
 
-            target.set( ARGBType.rgba( r, g, b, a ) );
-        }
-    }
+			final int value = accesses[0].get().get();
+			final int a = ARGBType.alpha(value);
+			final int r = ARGBType.red(value);
+			final int g = ARGBType.green(value);
+			final int b = ARGBType.blue(value);
+
+			target.set(ARGBType.rgba(r, g, b, a));
+		}
+	}
 }
-

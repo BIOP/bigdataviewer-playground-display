@@ -1,3 +1,4 @@
+
 package sc.fiji.bdvpg.bdv.supplier.biop;
 
 import org.scijava.plugin.Plugin;
@@ -10,17 +11,21 @@ import sc.fiji.persist.IClassRuntimeAdapter;
  */
 
 @Plugin(type = IClassRuntimeAdapter.class)
-public class BiopBdvSupplierAdapter implements IClassRuntimeAdapter<IBdvSupplier, BiopBdvSupplier> {
+public class BiopBdvSupplierAdapter implements
+	IClassRuntimeAdapter<IBdvSupplier, BiopBdvSupplier>
+{
 
-    @Override
-    public Class<? extends IBdvSupplier> getBaseClass() {
-        return IBdvSupplier.class;
-    }
+	@Override
+	public Class<? extends IBdvSupplier> getBaseClass() {
+		return IBdvSupplier.class;
+	}
 
-    @Override
-    public Class<? extends BiopBdvSupplier> getRunTimeClass() {
-        return BiopBdvSupplier.class;
-    }
+	@Override
+	public Class<? extends BiopBdvSupplier> getRunTimeClass() {
+		return BiopBdvSupplier.class;
+	}
 
-    public boolean useCustomAdapter() {return false;}
+	public boolean useCustomAdapter() {
+		return false;
+	}
 }

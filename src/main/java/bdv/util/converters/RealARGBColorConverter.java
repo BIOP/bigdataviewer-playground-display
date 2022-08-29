@@ -43,189 +43,179 @@ import java.util.Map;
  * @param <R> RealType
  */
 
-public abstract class RealARGBColorConverter< R extends RealType< ? > > implements ColorConverter, Converter< R, ARGBType >, ICloneableConverter
+public abstract class RealARGBColorConverter<R extends RealType<?>> implements
+	ColorConverter, Converter<R, ARGBType>, ICloneableConverter
 {
-    protected double min;
 
-    protected double max;
+	protected double min;
 
-    protected final ARGBType color = new ARGBType( ARGBType.rgba( 255, 255, 255, 255 ) );
+	protected double max;
 
-    protected int A;
+	protected final ARGBType color = new ARGBType(ARGBType.rgba(255, 255, 255,
+		255));
 
-    protected double scaleR;
+	protected int A;
 
-    protected double scaleG;
+	protected double scaleR;
 
-    protected double scaleB;
+	protected double scaleG;
 
-    public RealARGBColorConverter( final double min, final double max )
-    {
-        this.min = min;
-        this.max = max;
-        update();
-    }
+	protected double scaleB;
 
+	public RealARGBColorConverter(final double min, final double max) {
+		this.min = min;
+		this.max = max;
+		update();
+	}
 
-    protected int black;
+	protected int black;
 
-    // specify special colors for special values
-    final protected Map< Double, Integer > valueToColor = new HashMap<>(  );
+	// specify special colors for special values
+	final protected Map<Double, Integer> valueToColor = new HashMap<>();
 
-    public Map< Double, Integer > getValueToColor()
-    {
-        return valueToColor;
-    }
+	public Map<Double, Integer> getValueToColor() {
+		return valueToColor;
+	}
 
-    @Override
-    public ARGBType getColor()
-    {
-        return color.copy();
-    }
+	@Override
+	public ARGBType getColor() {
+		return color.copy();
+	}
 
-    @Override
-    public void setColor( final ARGBType c )
-    {
-        color.set( c );
-        update();
-    }
+	@Override
+	public void setColor(final ARGBType c) {
+		color.set(c);
+		update();
+	}
 
-    @Override
-    public boolean supportsColor()
-    {
-        return true;
-    }
+	@Override
+	public boolean supportsColor() {
+		return true;
+	}
 
-    @Override
-    public double getMin()
-    {
-        return min;
-    }
+	@Override
+	public double getMin() {
+		return min;
+	}
 
-    @Override
-    public double getMax()
-    {
-        return max;
-    }
+	@Override
+	public double getMax() {
+		return max;
+	}
 
-    @Override
-    public void setMax( final double max )
-    {
-        this.max = max;
-        update();
-    }
+	@Override
+	public void setMax(final double max) {
+		this.max = max;
+		update();
+	}
 
-    @Override
-    public void setMin( final double min )
-    {
-        this.min = min;
-        update();
-    }
+	@Override
+	public void setMin(final double min) {
+		this.min = min;
+		update();
+	}
 
-    private void update()
-    {
-        final double scale = 1.0 / ( max - min );
-        final int value = color.get();
-        A = ARGBType.alpha( value );
-        scaleR = ARGBType.red( value ) * scale;
-        scaleG = ARGBType.green( value ) * scale;
-        scaleB = ARGBType.blue( value ) * scale;
-        black = ARGBType.rgba( 0, 0, 0, A );
-    }
+	private void update() {
+		final double scale = 1.0 / (max - min);
+		final int value = color.get();
+		A = ARGBType.alpha(value);
+		scaleR = ARGBType.red(value) * scale;
+		scaleG = ARGBType.green(value) * scale;
+		scaleB = ARGBType.blue(value) * scale;
+		black = ARGBType.rgba(0, 0, 0, A);
+	}
 
-    public static class Imp0< R extends RealType< ? > > extends RealARGBColorConverter< R >
-    {
-        final double typeMin, typeMax;
-        public Imp0( final double min, final double max )
-        {
-            super( min, max );
-            typeMax = max;
-            typeMin = min;
-        }
+	public static class Imp0<R extends RealType<?>> extends
+		RealARGBColorConverter<R>
+	{
 
-        @Override
-        public void convert( final R input, final ARGBType output )
-        {
-            final double value = input.getRealDouble();
+		final double typeMin, typeMax;
 
-            if ( valueToColor.containsKey( value ) )
-            {
-                output.set( valueToColor.get( value ) );
-                return;
-            }
+		public Imp0(final double min, final double max) {
+			super(min, max);
+			typeMax = max;
+			typeMin = min;
+		}
 
-            final double valueMinusMin = value - min;
-            if ( valueMinusMin < 0 )
-            {
-                output.set( black );
-            }
-            else
-            {
-                final int r0 = ( int ) ( scaleR * valueMinusMin + 0.5 );
-                final int g0 = ( int ) ( scaleG * valueMinusMin + 0.5 );
-                final int b0 = ( int ) ( scaleB * valueMinusMin + 0.5 );
-                final int r = Math.min( 255, r0 );
-                final int g = Math.min( 255, g0 );
-                final int b = Math.min( 255, b0 );
-                output.set( ARGBType.rgba( r, g, b, 255) );
-            }
-        }
+		@Override
+		public void convert(final R input, final ARGBType output) {
+			final double value = input.getRealDouble();
 
-        @Override
-        public Converter duplicateConverter(SourceAndConverter source) {
-            RealARGBColorConverter.Imp0 converter = new RealARGBColorConverter.Imp0<>( typeMin, typeMax );
-            converter.setMin(this.min);
-            converter.setMax(this.max);
-            converter.setColor(this.getColor());
-            return converter;
-        }
-    }
+			if (valueToColor.containsKey(value)) {
+				output.set(valueToColor.get(value));
+				return;
+			}
 
-    public static class Imp1< R extends RealType< ? > > extends RealARGBColorConverter< R >
-    {
-        final double typeMin, typeMax;
-        public Imp1( final double min, final double max )
-        {
-            super( min, max );
-            typeMax = max;
-            typeMin = min;
-        }
+			final double valueMinusMin = value - min;
+			if (valueMinusMin < 0) {
+				output.set(black);
+			}
+			else {
+				final int r0 = (int) (scaleR * valueMinusMin + 0.5);
+				final int g0 = (int) (scaleG * valueMinusMin + 0.5);
+				final int b0 = (int) (scaleB * valueMinusMin + 0.5);
+				final int r = Math.min(255, r0);
+				final int g = Math.min(255, g0);
+				final int b = Math.min(255, b0);
+				output.set(ARGBType.rgba(r, g, b, 255));
+			}
+		}
 
-        @Override
-        public void convert( final R input, final ARGBType output )
-        {
-            final double value = input.getRealDouble();
+		@Override
+		public Converter duplicateConverter(SourceAndConverter source) {
+			RealARGBColorConverter.Imp0 converter = new RealARGBColorConverter.Imp0<>(
+				typeMin, typeMax);
+			converter.setMin(this.min);
+			converter.setMax(this.max);
+			converter.setColor(this.getColor());
+			return converter;
+		}
+	}
 
-            if ( valueToColor.containsKey( value ) )
-            {
-                output.set( valueToColor.get( value ) );
-                return;
-            }
+	public static class Imp1<R extends RealType<?>> extends
+		RealARGBColorConverter<R>
+	{
 
-            final double valueMinusMin = value - min;
-            if ( valueMinusMin < 0 )
-            {
-                output.set( black );
-            }
-            else
-            {
-                final int r0 = ( int ) ( scaleR * valueMinusMin + 0.5 );
-                final int g0 = ( int ) ( scaleG * valueMinusMin + 0.5 );
-                final int b0 = ( int ) ( scaleB * valueMinusMin + 0.5 );
-                final int r = Math.min( 255, r0 );
-                final int g = Math.min( 255, g0 );
-                final int b = Math.min( 255, b0 );
-                output.set( ARGBType.rgba( r, g, b, 255) );
-            }
-        }
+		final double typeMin, typeMax;
 
-        @Override
-        public Converter duplicateConverter(SourceAndConverter source) {
-            RealARGBColorConverter.Imp1 converter = new RealARGBColorConverter.Imp1<>( typeMin, typeMax );
-            converter.setMin(this.min);
-            converter.setMax(this.max);
-            converter.setColor(this.getColor());
-            return converter;
-        }
-    }
+		public Imp1(final double min, final double max) {
+			super(min, max);
+			typeMax = max;
+			typeMin = min;
+		}
+
+		@Override
+		public void convert(final R input, final ARGBType output) {
+			final double value = input.getRealDouble();
+
+			if (valueToColor.containsKey(value)) {
+				output.set(valueToColor.get(value));
+				return;
+			}
+
+			final double valueMinusMin = value - min;
+			if (valueMinusMin < 0) {
+				output.set(black);
+			}
+			else {
+				final int r0 = (int) (scaleR * valueMinusMin + 0.5);
+				final int g0 = (int) (scaleG * valueMinusMin + 0.5);
+				final int b0 = (int) (scaleB * valueMinusMin + 0.5);
+				final int r = Math.min(255, r0);
+				final int g = Math.min(255, g0);
+				final int b = Math.min(255, b0);
+				output.set(ARGBType.rgba(r, g, b, 255));
+			}
+		}
+
+		@Override
+		public Converter duplicateConverter(SourceAndConverter source) {
+			RealARGBColorConverter.Imp1 converter = new RealARGBColorConverter.Imp1<>(
+				typeMin, typeMax);
+			converter.setMin(this.min);
+			converter.setMax(this.max);
+			converter.setColor(this.getColor());
+			return converter;
+		}
+	}
 }

@@ -1,3 +1,4 @@
+
 package sc.fiji.bdvpg.bdv.supplier;
 
 import bdv.ui.SourcesTransferable;
@@ -15,57 +16,67 @@ import java.awt.event.MouseEvent;
 
 public class BdvSupplierHelper {
 
-    public static void addSourcesDragAndDrop(BdvHandle bdvh) {
-        bdvh.getViewerPanel().setTransferHandler(new BdvTransferHandler());
-    }
+	public static void addSourcesDragAndDrop(BdvHandle bdvh) {
+		bdvh.getViewerPanel().setTransferHandler(new BdvTransferHandler());
+	}
 
-    public static SourceSelectorBehaviour addEditorMode(BdvHandle bdvh, String pathToBindings) {
+	public static SourceSelectorBehaviour addEditorMode(BdvHandle bdvh,
+		String pathToBindings)
+	{
 
-        Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
+		Behaviours behaviours = new Behaviours(new InputTriggerConfig());
 
-        // Adds selection mode triggered by E
+		// Adds selection mode triggered by E
 
-        // Set up a source selection mode with a trigger input key that toggles it on and off
-        SourceSelectorBehaviour ssb = new SourceSelectorBehaviour(bdvh, "E");
+		// Set up a source selection mode with a trigger input key that toggles it
+		// on and off
+		SourceSelectorBehaviour ssb = new SourceSelectorBehaviour(bdvh, "E");
 
-        // Stores the associated selector to the display
-        SourceAndConverterServices.getBdvDisplayService().setDisplayMetadata(
-                bdvh, SourceSelectorBehaviour.class.getSimpleName(), ssb);
+		// Stores the associated selector to the display
+		SourceAndConverterServices.getBdvDisplayService().setDisplayMetadata(bdvh,
+			SourceSelectorBehaviour.class.getSimpleName(), ssb);
 
-        new EditorBehaviourInstaller(ssb, pathToBindings).run();
+		new EditorBehaviourInstaller(ssb, pathToBindings).run();
 
-        // Custom Drag support
-        if (bdvh.getViewerPanel().getTransferHandler() instanceof BdvTransferHandler) {
-            System.out.println("Dragging support enabled");
-            BdvTransferHandler handler = (BdvTransferHandler) bdvh.getViewerPanel().getTransferHandler();
-            handler.setTransferableFunction(c -> new SourcesTransferable(ssb.getSelectedSources()));
-            ssb.addBehaviour(new DragNDSourcesBehaviour(bdvh), "drag-selected-sources", new String[]{"alt button1"});
-        }
-        return ssb;
-    }
+		// Custom Drag support
+		if (bdvh.getViewerPanel()
+			.getTransferHandler() instanceof BdvTransferHandler)
+		{
+			System.out.println("Dragging support enabled");
+			BdvTransferHandler handler = (BdvTransferHandler) bdvh.getViewerPanel()
+				.getTransferHandler();
+			handler.setTransferableFunction(c -> new SourcesTransferable(ssb
+				.getSelectedSources()));
+			ssb.addBehaviour(new DragNDSourcesBehaviour(bdvh),
+				"drag-selected-sources", new String[] { "alt button1" });
+		}
+		return ssb;
+	}
 
-    static class DragNDSourcesBehaviour implements DragBehaviour {
+	static class DragNDSourcesBehaviour implements DragBehaviour {
 
-        final BdvHandle bdvh;
+		final BdvHandle bdvh;
 
-        public DragNDSourcesBehaviour(BdvHandle bdvh) {
-            this.bdvh = bdvh;
-        }
+		public DragNDSourcesBehaviour(BdvHandle bdvh) {
+			this.bdvh = bdvh;
+		}
 
-        @Override
-        public void init(int x, int y) {
-            bdvh.getViewerPanel().getTransferHandler().exportAsDrag(bdvh.getViewerPanel(), new MouseEvent(bdvh.getViewerPanel(), 0, 0, 0, 100, 100, 1, false), TransferHandler.MOVE);
-        }
+		@Override
+		public void init(int x, int y) {
+			bdvh.getViewerPanel().getTransferHandler().exportAsDrag(bdvh
+				.getViewerPanel(), new MouseEvent(bdvh.getViewerPanel(), 0, 0, 0, 100,
+					100, 1, false), TransferHandler.MOVE);
+		}
 
-        @Override
-        public void drag(int x, int y) {
+		@Override
+		public void drag(int x, int y) {
 
-        }
+		}
 
-        @Override
-        public void end(int x, int y) {
+		@Override
+		public void end(int x, int y) {
 
-        }
-    }
+		}
+	}
 
 }

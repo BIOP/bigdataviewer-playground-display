@@ -1,3 +1,4 @@
+
 package sc.fiji.bdvpg.bdv.supplier.biop;
 
 import bdv.util.BdvFunctions;
@@ -18,50 +19,54 @@ import javax.swing.*;
 
 public class BiopBdvSupplier implements IBdvSupplier {
 
-    public final BiopSerializableBdvOptions sOptions;
+	public final BiopSerializableBdvOptions sOptions;
 
-    public BiopBdvSupplier(BiopSerializableBdvOptions sOptions) {
-        this.sOptions = sOptions;
-    }
+	public BiopBdvSupplier(BiopSerializableBdvOptions sOptions) {
+		this.sOptions = sOptions;
+	}
 
-    @Override
-    public BdvHandle get() {
-        BdvOptions options = sOptions.getBdvOptions();
+	@Override
+	public BdvHandle get() {
+		BdvOptions options = sOptions.getBdvOptions();
 
-        // create dummy image to instantiate the BDV
-        ArrayImg<ByteType, ByteArray> dummyImg = ArrayImgs.bytes(2, 2, 2);
-        options = options.sourceTransform( new AffineTransform3D() );
-        BdvStackSource<ByteType> bss = BdvFunctions.show( dummyImg, "dummy", options );
-        BdvHandle bdvh = bss.getBdvHandle();
+		// create dummy image to instantiate the BDV
+		ArrayImg<ByteType, ByteArray> dummyImg = ArrayImgs.bytes(2, 2, 2);
+		options = options.sourceTransform(new AffineTransform3D());
+		BdvStackSource<ByteType> bss = BdvFunctions.show(dummyImg, "dummy",
+			options);
+		BdvHandle bdvh = bss.getBdvHandle();
 
-        if ( sOptions.interpolate ) bdvh.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
+		if (sOptions.interpolate) bdvh.getViewerPanel().setInterpolation(
+			Interpolation.NLINEAR);
 
-        // remove dummy image
-        bdvh.getViewerPanel().state().removeSource(bdvh.getViewerPanel().state().getCurrentSource());
-        bdvh.getViewerPanel().setNumTimepoints( sOptions.numTimePoints );
+		// remove dummy image
+		bdvh.getViewerPanel().state().removeSource(bdvh.getViewerPanel().state()
+			.getCurrentSource());
+		bdvh.getViewerPanel().setNumTimepoints(sOptions.numTimePoints);
 
-        BdvSupplierHelper.addSourcesDragAndDrop(bdvh);
+		BdvSupplierHelper.addSourcesDragAndDrop(bdvh);
 
-        SourceSelectorBehaviour ssb = BdvSupplierHelper.addEditorMode(bdvh, "");
-        bdvh.getSplitPanel().setCollapsed(false);
+		SourceSelectorBehaviour ssb = BdvSupplierHelper.addEditorMode(bdvh, "");
+		bdvh.getSplitPanel().setCollapsed(false);
 
-        JPanel editorModeToggle = new JPanel();
-        JButton editorToggle = new JButton("Editor Mode");
-        editorToggle.addActionListener((e) -> {
-            if (ssb.isEnabled()) {
-                ssb.disable();
-                editorToggle.setText("Editor Mode 'E'");
-            } else {
-                ssb.enable();
-                editorToggle.setText("Navigation Mode 'E'");
-            }
-        });
+		JPanel editorModeToggle = new JPanel();
+		JButton editorToggle = new JButton("Editor Mode");
+		editorToggle.addActionListener((e) -> {
+			if (ssb.isEnabled()) {
+				ssb.disable();
+				editorToggle.setText("Editor Mode 'E'");
+			}
+			else {
+				ssb.enable();
+				editorToggle.setText("Navigation Mode 'E'");
+			}
+		});
 
-        editorModeToggle.add(editorToggle);
+		editorModeToggle.add(editorToggle);
 
-        bdvh.getCardPanel().addCard("Mode", editorModeToggle, true);
+		bdvh.getCardPanel().addCard("Mode", editorModeToggle, true);
 
-        return bdvh;
-    }
+		return bdvh;
+	}
 
 }

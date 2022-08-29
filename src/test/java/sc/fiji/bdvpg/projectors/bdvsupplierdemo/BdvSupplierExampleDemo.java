@@ -1,3 +1,4 @@
+
 package sc.fiji.bdvpg.projectors.bdvsupplierdemo;
 
 import bdv.util.BdvHandle;
@@ -17,47 +18,52 @@ import sc.fiji.bdvpg.spimdata.importer.SpimDataFromXmlImporter;
 import java.util.List;
 
 public class BdvSupplierExampleDemo {
-    static ImageJ ij;
 
-    public static void main( String[] args )
-    {
-        ij = new ImageJ();
-        ij.ui().showUI();
+	static ImageJ ij;
 
+	public static void main(String[] args) {
+		ij = new ImageJ();
+		ij.ui().showUI();
 
-        IBdvSupplier bdvSupplier = new BdvSupplierExample();
+		IBdvSupplier bdvSupplier = new BdvSupplierExample();
 
-        SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(bdvSupplier);
+		SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(
+			bdvSupplier);
 
-        BdvHandle bdv = SourceAndConverterServices.getBdvDisplayService().getNewBdv();
+		BdvHandle bdv = SourceAndConverterServices.getBdvDisplayService()
+			.getNewBdv();
 
-        // Import SpimData
-        new SpimDataFromXmlImporter( "src/test/resources/mri-stack.xml" ).run();
-        new SpimDataFromXmlImporter("src/test/resources/mri-stack-shiftedX.xml").run();
-        new SpimDataFromXmlImporter( "src/test/resources/mri-stack-shiftedY.xml" ).run();
+		// Import SpimData
+		new SpimDataFromXmlImporter("src/test/resources/mri-stack.xml").run();
+		new SpimDataFromXmlImporter("src/test/resources/mri-stack-shiftedX.xml")
+			.run();
+		new SpimDataFromXmlImporter("src/test/resources/mri-stack-shiftedY.xml")
+			.run();
 
-        // Get a handle on the sacs
-        final List<SourceAndConverter<?>> sacs = SourceAndConverterServices.getSourceAndConverterService().getSourceAndConverters();
+		// Get a handle on the sacs
+		final List<SourceAndConverter<?>> sacs = SourceAndConverterServices
+			.getSourceAndConverterService().getSourceAndConverters();
 
-        // Show all three sacs
-        sacs.forEach( sac -> {
-            SourceAndConverterServices.getBdvDisplayService().show(bdv, sac);
-            new ViewerTransformAdjuster(bdv, sac).run();
-            new BrightnessAutoAdjuster<>(sac, 0).run();
-        });
+		// Show all three sacs
+		sacs.forEach(sac -> {
+			SourceAndConverterServices.getBdvDisplayService().show(bdv, sac);
+			new ViewerTransformAdjuster(bdv, sac).run();
+			new BrightnessAutoAdjuster<>(sac, 0).run();
+		});
 
-        // Change color of third one
-        new ColorChanger( sacs.get( 2 ), new ARGBType( ARGBType.rgba( 0, 255, 0, 255 ) ) ).run();
+		// Change color of third one
+		new ColorChanger(sacs.get(2), new ARGBType(ARGBType.rgba(0, 255, 0, 255)))
+			.run();
 
-    }
+	}
 
-    @Test
-    public void demoRunOk() {
-        main(new String[]{""});
-    }
+	@Test
+	public void demoRunOk() {
+		main(new String[] { "" });
+	}
 
-    @After
-    public void closeFiji() {
-        TestHelper.closeFijiAndBdvs(ij);
-    }
+	@After
+	public void closeFiji() {
+		TestHelper.closeFijiAndBdvs(ij);
+	}
 }
