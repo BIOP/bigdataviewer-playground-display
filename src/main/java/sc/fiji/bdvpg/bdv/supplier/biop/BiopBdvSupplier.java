@@ -12,8 +12,11 @@ import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.ByteType;
+import sc.fiji.bdvpg.bdv.BdvHandleHelper;
+import sc.fiji.bdvpg.bdv.navigate.RayCastPositionerSliderAdder;
 import sc.fiji.bdvpg.bdv.supplier.BdvSupplierHelper;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.scijava.command.bdv.MultiBdvZSliderAdderCommand;
 
 import javax.swing.*;
 
@@ -64,7 +67,9 @@ public class BiopBdvSupplier implements IBdvSupplier {
 
 		editorModeToggle.add(editorToggle);
 
-		bdvh.getCardPanel().addCard("Mode", editorModeToggle, true);
+		BdvHandleHelper.addCenterCross(bdvh);
+		SwingUtilities.invokeLater(() -> new RayCastPositionerSliderAdder(bdvh).run());
+		BdvHandleHelper.addCard(bdvh, "Mode", editorModeToggle, true);
 
 		return bdvh;
 	}
