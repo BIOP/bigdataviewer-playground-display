@@ -10,6 +10,8 @@ import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
 import sc.fiji.bdvpg.bdv.navigate.ViewerTransformAdjuster;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
+import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
 import sc.fiji.bdvpg.services.SourceAndConverterServices;
 import sc.fiji.bdvpg.sourceandconverter.display.BrightnessAutoAdjuster;
 import sc.fiji.bdvpg.sourceandconverter.display.ColorChanger;
@@ -25,7 +27,7 @@ public class BdvSupplierExampleDemo {
 		ij = new ImageJ();
 		ij.ui().showUI();
 
-		IBdvSupplier bdvSupplier = new BdvSupplierExample();
+		IBdvSupplier bdvSupplier = new BiopBdvSupplier(BiopSerializableBdvOptions.options());//BdvSupplierExample();
 
 		SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(
 			bdvSupplier);

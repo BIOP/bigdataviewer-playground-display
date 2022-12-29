@@ -24,8 +24,6 @@ public class BdvSupplierHelper {
 		String pathToBindings)
 	{
 
-		Behaviours behaviours = new Behaviours(new InputTriggerConfig());
-
 		// Adds selection mode triggered by E
 
 		// Set up a source selection mode with a trigger input key that toggles it

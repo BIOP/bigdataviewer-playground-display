@@ -4,8 +4,11 @@ package sc.fiji.bdvpg.bdv.supplier.biop;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
+import bdv.util.BdvOverlaySource;
 import bdv.util.BdvStackSource;
 import bdv.viewer.Interpolation;
+import bdv.viewer.ViewerStateChange;
+import bdv.viewer.ViewerStateChangeListener;
 import ch.epfl.biop.bdv.select.SourceSelectorBehaviour;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
@@ -14,11 +17,19 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.ByteType;
 import sc.fiji.bdvpg.bdv.BdvHandleHelper;
 import sc.fiji.bdvpg.bdv.navigate.RayCastPositionerSliderAdder;
+import sc.fiji.bdvpg.bdv.navigate.SourceNavigatorSliderAdder;
+import sc.fiji.bdvpg.bdv.navigate.TimepointAdapterAdder;
+import sc.fiji.bdvpg.bdv.overlay.SourceNameOverlay;
+import sc.fiji.bdvpg.bdv.overlay.SourceNameOverlayAdder;
 import sc.fiji.bdvpg.bdv.supplier.BdvSupplierHelper;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
 import sc.fiji.bdvpg.scijava.command.bdv.MultiBdvZSliderAdderCommand;
+import sc.fiji.bdvpg.sourceandconverter.SourceAndConverterHelper;
 
 import javax.swing.*;
+import java.awt.Font;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BiopBdvSupplier implements IBdvSupplier {
 
@@ -26,6 +37,10 @@ public class BiopBdvSupplier implements IBdvSupplier {
 
 	public BiopBdvSupplier(BiopSerializableBdvOptions sOptions) {
 		this.sOptions = sOptions;
+	}
+
+	public BiopBdvSupplier() {
+		this.sOptions = BiopSerializableBdvOptions.options();
 	}
 
 	@Override
@@ -66,6 +81,32 @@ public class BiopBdvSupplier implements IBdvSupplier {
 		});
 
 		editorModeToggle.add(editorToggle);
+
+		JButton nameToggle = new JButton("Display sources name");
+		AtomicBoolean nameOverlayEnabled = new AtomicBoolean();
+		nameOverlayEnabled.set(true);
+
+		SourceNameOverlayAdder nameOverlayAdder = new SourceNameOverlayAdder(bdvh, new Font(sOptions.font, Font.PLAIN, sOptions.fontSize));
+		nameOverlayAdder.run();
+
+		nameToggle.addActionListener((e) -> {
+			if (nameOverlayEnabled.get()) {
+				nameOverlayEnabled.set(false);
+				nameToggle.setText("Display sources names");
+				nameOverlayAdder.removeFromBdv();
+
+			}
+			else {
+				nameOverlayEnabled.set(true);
+				nameToggle.setText("Hide sources name");
+				nameOverlayAdder.addToBdv();
+			}
+		});
+
+		new SourceNavigatorSliderAdder(bdvh).run();
+		new TimepointAdapterAdder(bdvh).run();
+
+		editorModeToggle.add(nameToggle);
 
 		BdvHandleHelper.addCenterCross(bdvh);
 		SwingUtilities.invokeLater(() -> new RayCastPositionerSliderAdder(bdvh).run());

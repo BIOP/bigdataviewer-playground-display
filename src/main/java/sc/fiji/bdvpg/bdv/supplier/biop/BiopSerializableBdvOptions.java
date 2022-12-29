@@ -34,6 +34,13 @@ public class BiopSerializableBdvOptions {
 
 	public AccumulateProjectorFactory<ARGBType> accumulateProjectorFactory =
 		AccumulateProjectorARGB.factory;
+	public int fontSize = 18;
+
+	public String font = "Courier";
+
+	public static BiopSerializableBdvOptions options() {
+		return new BiopSerializableBdvOptions();
+	}
 
 	public BdvOptions getBdvOptions() {
 		BdvOptions o = BdvOptions.options().screenScales(this.screenScales)

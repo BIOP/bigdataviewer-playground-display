@@ -3,6 +3,7 @@ package sc.fiji.bdvpg.bdv.supplier.biop;
 
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.util.ColorRGB;
 import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
 import sc.fiji.bdvpg.scijava.ScijavaBdvDefaults;
 import sc.fiji.bdvpg.scijava.command.BdvPlaygroundActionCommand;
@@ -51,6 +52,12 @@ public class BdvSetBiopViewerSettingsCommand implements
 	int numtimepoints = 1;
 
 	@Parameter
+	int fontSize = 18;
+
+	@Parameter(choices = {"Courier", "TimesRoman"})
+	String font;
+
+	@Parameter
 	SourceAndConverterBdvDisplayService sacDisplayService;
 
 	@Override
@@ -72,6 +79,8 @@ public class BdvSetBiopViewerSettingsCommand implements
 			options.numSourceGroups = numsourcegroups;
 			options.numTimePoints = numtimepoints;
 			options.interpolate = interpolate;
+			options.font = font;
+			options.fontSize = fontSize;
 			IBdvSupplier bdvSupplier = new BiopBdvSupplier(options);
 			sacDisplayService.setDefaultBdvSupplier(bdvSupplier);
 		}
