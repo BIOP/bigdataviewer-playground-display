@@ -87,7 +87,6 @@ public class BiopBdvSupplier implements IBdvSupplier {
 		nameOverlayEnabled.set(true);
 
 		SourceNameOverlayAdder nameOverlayAdder = new SourceNameOverlayAdder(bdvh, new Font(sOptions.font, Font.PLAIN, sOptions.fontSize));
-		nameOverlayAdder.run();
 
 		nameToggle.addActionListener((e) -> {
 			if (nameOverlayEnabled.get()) {
@@ -103,13 +102,17 @@ public class BiopBdvSupplier implements IBdvSupplier {
 			}
 		});
 
-		new SourceNavigatorSliderAdder(bdvh).run();
-		new TimepointAdapterAdder(bdvh).run();
-
 		editorModeToggle.add(nameToggle);
 
-		BdvHandleHelper.addCenterCross(bdvh);
-		SwingUtilities.invokeLater(() -> new RayCastPositionerSliderAdder(bdvh).run());
+		SwingUtilities.invokeLater(() -> {
+			nameOverlayAdder.run();
+			BdvHandleHelper.addCenterCross(bdvh);
+			new RayCastPositionerSliderAdder(bdvh).run();
+			new SourceNavigatorSliderAdder(bdvh).run();
+			new TimepointAdapterAdder(bdvh).run();
+		});
+		//SwingUtilities.invokeLater(() -> BdvHandleHelper.addCenterCross(bdvh));
+		//SwingUtilities.invokeLater(() -> new RayCastPositionerSliderAdder(bdvh).run());
 		BdvHandleHelper.addCard(bdvh, "Mode", editorModeToggle, true);
 
 		return bdvh;
