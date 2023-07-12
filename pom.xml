@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>35.0.0</version>
+		<version>36.0.0</version>
 		<relativePath />
 	</parent>
 
@@ -82,10 +82,10 @@
 	<properties>
 		<license.licenseName>N/A</license.licenseName>
 		<license.copyrightOwners>N/A</license.copyrightOwners>
-		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
+		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
-		<bigdataviewer-playground.version>0.7.0</bigdataviewer-playground.version>
-		<bigdataviewer-spimdata-extras.version>0.3.2</bigdataviewer-spimdata-extras.version>
+		<bigdataviewer-playground.version>0.8.0</bigdataviewer-playground.version>
+		<bigdataviewer-spimdata-extras.version>0.4.0</bigdataviewer-spimdata-extras.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
