@@ -70,11 +70,11 @@ public class BdvSupplierExample implements IBdvSupplier {
 		// Append a new Card
 
 		JLabel label = new JLabel("Hello!");
-		bdv.getCardPanel().addCard("My Card", label, true);
+		BdvHandleHelper.addCard(bdv, "My Card", label, true);
 
-		// Collapse group card
-		bdv.getCardPanel().setCardExpanded(
-			BdvDefaultCards.DEFAULT_SOURCEGROUPS_CARD, false);
+		// Collapse group card -> todo in swingutilities
+		// bdv.getCardPanel().setCardExpanded(
+		//	BdvDefaultCards.DEFAULT_SOURCEGROUPS_CARD, false);
 
 		IJ.log("You have created a new bdv window from " + this);
 
