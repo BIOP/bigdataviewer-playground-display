@@ -84,9 +84,10 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
-		<bigdataviewer-playground.version>0.8.1</bigdataviewer-playground.version>
+		<bigdataviewer-playground.version>0.10.1</bigdataviewer-playground.version>
 		<bigdataviewer-spimdata-extras.version>0.4.1</bigdataviewer-spimdata-extras.version>
 
+		<bigwarp.version>9.1.2</bigwarp.version> <!-- avoid issue with gson serializer -->
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
 	</properties>
