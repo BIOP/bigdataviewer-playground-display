@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji.bigdataviewer</groupId>
 	<artifactId>bigdataviewer-playground-display</artifactId>
-	<version>0.4.3-SNAPSHOT</version>
+	<version>0.4.4-SNAPSHOT</version>
 
 	<name>BigDataViewer Playground Display</name>
 	<description>Display (metadata and projectors) for BigDataViewer Playground.</description>
