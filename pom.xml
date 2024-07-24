@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>37.0.0</version>
+		<version>38.0.1</version>
 		<relativePath />
 	</parent>
 
@@ -84,17 +84,12 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
-		<bigdataviewer-playground.version>0.10.1</bigdataviewer-playground.version>
-		<bigdataviewer-spimdata-extras.version>0.4.1</bigdataviewer-spimdata-extras.version>
+		<bigdataviewer-playground.version>0.10.3</bigdataviewer-playground.version>
+		<bigdataviewer-spimdata-extras.version>0.4.2</bigdataviewer-spimdata-extras.version>
 
-		<bigwarp.version>9.1.2</bigwarp.version> <!-- avoid issue with gson serializer -->
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 
-		<!-- temp fix issue with duplicate classes -->
-		<ejml-core.version>0.41</ejml-core.version>
-		<ejml-ddense.version>0.41</ejml-ddense.version>
-
-		<jitk-tps.version>3.0.4</jitk-tps.version>
+		<!-- temp fix issue with parent pom -->
 
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
 	</properties>
@@ -133,27 +128,11 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigwarp_fiji</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>ch.epfl.biop</groupId>
 			<artifactId>bigdataviewer-spimdata-extras</artifactId>
 			<version>${bigdataviewer-spimdata-extras.version}</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.ejml</groupId>
-			<artifactId>ejml-core</artifactId>
-			<version>${ejml-core.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.ejml</groupId>
-			<artifactId>ejml-ddense</artifactId>
-			<version>${ejml-ddense.version}</version>
 		</dependency>
 
 	</dependencies>
