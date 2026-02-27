@@ -7,9 +7,9 @@ import ch.epfl.biop.bdv.select.SourceSelectorBehaviour;
 import org.scijava.ui.behaviour.DragBehaviour;
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
-import sc.fiji.bdvpg.behaviour.EditorBehaviourInstaller;
-import sc.fiji.bdvpg.scijava.services.ui.swingdnd.BdvTransferHandler;
-import sc.fiji.bdvpg.services.SourceAndConverterServices;
+import sc.fiji.bdvpg.viewers.behaviour.EditorBehaviourInstaller;
+import sc.fiji.bdvpg.scijava.services.tree.swingdnd.BdvTransferHandler;
+import sc.fiji.bdvpg.services.SourceServices;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -31,10 +31,10 @@ public class BdvSupplierHelper {
 		SourceSelectorBehaviour ssb = new SourceSelectorBehaviour(bdvh, "E");
 
 		// Stores the associated selector to the display
-		SourceAndConverterServices.getBdvDisplayService().setDisplayMetadata(bdvh,
+		SourceServices.getBdvDisplayService().setDisplayMetadata(bdvh,
 			SourceSelectorBehaviour.class.getSimpleName(), ssb);
 
-		new EditorBehaviourInstaller(ssb, pathToBindings).run();
+		new EditorBehaviourInstaller(ssb).run();
 
 		// Custom Drag support
 		if (bdvh.getViewerPanel()

@@ -34,7 +34,7 @@ import net.imglib2.converter.Converter;
 import net.imglib2.display.ColorConverter;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import sc.fiji.bdvpg.sourceandconverter.ICloneableConverter;
+import sc.fiji.bdvpg.source.ICloneableConverter;
 
 import java.util.HashMap;
 import java.util.Map;

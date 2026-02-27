@@ -35,8 +35,8 @@ import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
-import sc.fiji.bdvpg.services.SourceAndConverterServiceLoader;
-import sc.fiji.bdvpg.services.SourceAndConverterServices;
+import sc.fiji.bdvpg.services.SourceServiceLoader;
+import sc.fiji.bdvpg.services.SourceServices;
 
 public class BdvPlaygroundStateLoader {
 
@@ -46,10 +46,10 @@ public class BdvPlaygroundStateLoader {
 		ij = new ImageJ();
 		ij.ui().showUI();
 
-		new SourceAndConverterServiceLoader(
+		new SourceServiceLoader(
 			"src/test/resources/bdvplaygroundstate.json", "src/test/resources/", ij
 				.context(), false).run();
-		SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(
+		SourceServices.getBdvDisplayService().setDefaultBdvSupplier(
 			new BiopBdvSupplier(new BiopSerializableBdvOptions()));
 	}
 

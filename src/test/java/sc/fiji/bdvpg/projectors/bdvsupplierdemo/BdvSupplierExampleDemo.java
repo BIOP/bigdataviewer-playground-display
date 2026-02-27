@@ -8,14 +8,14 @@ import net.imglib2.type.numeric.ARGBType;
 import org.junit.After;
 import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
-import sc.fiji.bdvpg.bdv.navigate.ViewerTransformAdjuster;
-import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.viewers.bdv.navigate.ViewerTransformAdjuster;
+import sc.fiji.bdvpg.viewers.bdv.supplier.IBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
-import sc.fiji.bdvpg.services.SourceAndConverterServices;
-import sc.fiji.bdvpg.sourceandconverter.display.BrightnessAutoAdjuster;
-import sc.fiji.bdvpg.sourceandconverter.display.ColorChanger;
-import sc.fiji.bdvpg.spimdata.importer.SpimDataFromXmlImporter;
+import sc.fiji.bdvpg.services.SourceServices;
+import sc.fiji.bdvpg.source.display.BrightnessAutoAdjuster;
+import sc.fiji.bdvpg.source.display.ColorChanger;
+import sc.fiji.bdvpg.dataset.importer.SpimDataFromXmlImporter;
 
 import java.util.List;
 
@@ -29,10 +29,10 @@ public class BdvSupplierExampleDemo {
 
 		IBdvSupplier bdvSupplier = new BiopBdvSupplier(BiopSerializableBdvOptions.options());//BdvSupplierExample();
 
-		SourceAndConverterServices.getBdvDisplayService().setDefaultBdvSupplier(
+		SourceServices.getBdvDisplayService().setDefaultBdvSupplier(
 			bdvSupplier);
 
-		BdvHandle bdv = SourceAndConverterServices.getBdvDisplayService()
+		BdvHandle bdv = SourceServices.getBdvDisplayService()
 			.getNewBdv();
 
 		// Import SpimData
@@ -43,12 +43,12 @@ public class BdvSupplierExampleDemo {
 			.run();
 
 		// Get a handle on the sacs
-		final List<SourceAndConverter<?>> sacs = SourceAndConverterServices
-			.getSourceAndConverterService().getSourceAndConverters();
+		final List<SourceAndConverter<?>> sacs = SourceServices
+			.getSourceService().getSources();
 
 		// Show all three sacs
 		sacs.forEach(sac -> {
-			SourceAndConverterServices.getBdvDisplayService().show(bdv, sac);
+			SourceServices.getBdvDisplayService().show(bdv, sac);
 			new ViewerTransformAdjuster(bdv, sac).run();
 			new BrightnessAutoAdjuster<>(sac, 0).run();
 		});

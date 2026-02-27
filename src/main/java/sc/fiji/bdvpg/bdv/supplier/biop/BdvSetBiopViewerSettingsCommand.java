@@ -1,19 +1,27 @@
 
 package sc.fiji.bdvpg.bdv.supplier.biop;
 
+import org.scijava.plugin.Menu;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.util.ColorRGB;
-import sc.fiji.bdvpg.bdv.supplier.IBdvSupplier;
-import sc.fiji.bdvpg.scijava.ScijavaBdvDefaults;
-import sc.fiji.bdvpg.scijava.command.BdvPlaygroundActionCommand;
-import sc.fiji.bdvpg.scijava.services.SourceAndConverterBdvDisplayService;
+import sc.fiji.bdvpg.scijava.BdvPgMenus;
+import sc.fiji.bdvpg.viewers.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.command.BdvPlaygroundActionCommand;
+import sc.fiji.bdvpg.scijava.services.SourceBdvDisplayService;
 
 import java.util.Arrays;
 
 @SuppressWarnings({ "CanBeFinal", "Unused" })
 @Plugin(type = BdvPlaygroundActionCommand.class,
-	menuPath = ScijavaBdvDefaults.RootMenu + "BDV>BDV - Set BDV window (biop)",
+	//menuPath = ScijavaBdvDefaults.RootMenu + "View>BDV>Settings>BDV - Set Style (BIOP)",
+		menu = {
+				@Menu(label = BdvPgMenus.L1),
+				@Menu(label = BdvPgMenus.L2),
+				@Menu(label = BdvPgMenus.DisplayMenu, weight = BdvPgMenus.DisplayW),
+				@Menu(label = BdvPgMenus.BDVMenu, weight = BdvPgMenus.BDVW),
+				@Menu(label = "Settings", weight = -2),
+				@Menu(label = "BDV - Set Style (BIOP)", weight = -2)
+		},
 	description = "Set preferences of Bdv Window (Biop)")
 public class BdvSetBiopViewerSettingsCommand implements
 	BdvPlaygroundActionCommand
@@ -58,7 +66,7 @@ public class BdvSetBiopViewerSettingsCommand implements
 	String font;
 
 	@Parameter
-	SourceAndConverterBdvDisplayService sacDisplayService;
+	SourceBdvDisplayService sacDisplayService;
 
 	@Override
 	public void run() {

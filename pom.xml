@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji.bigdataviewer</groupId>
 	<artifactId>bigdataviewer-playground-display</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>0.5.1-SNAPSHOT-TEST</version>
 
 	<name>BigDataViewer Playground Display</name>
 	<description>Display (metadata and projectors) for BigDataViewer Playground.</description>
@@ -84,7 +84,7 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
-		<bigdataviewer-playground.version>0.11.0</bigdataviewer-playground.version>
+		<bigdataviewer-playground.version>0.18.0-SNAPSHOT</bigdataviewer-playground.version>
 		<bigdataviewer-spimdata-extras.version>0.5.0</bigdataviewer-spimdata-extras.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->

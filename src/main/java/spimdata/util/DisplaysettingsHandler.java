@@ -6,7 +6,7 @@ import mpicbg.spim.data.generic.AbstractSpimData;
 import mpicbg.spim.data.generic.base.Entity;
 import mpicbg.spim.data.generic.sequence.BasicViewSetup;
 import org.scijava.plugin.Plugin;
-import sc.fiji.bdvpg.spimdata.EntityHandler;
+import sc.fiji.bdvpg.dataset.EntityHandler;
 
 @Plugin(type = EntityHandler.class)
 public class DisplaysettingsHandler implements EntityHandler {
