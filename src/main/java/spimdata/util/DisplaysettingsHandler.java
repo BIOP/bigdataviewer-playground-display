@@ -18,10 +18,10 @@ public class DisplaysettingsHandler implements EntityHandler {
 
 	@Override
 	public boolean writeEntity(BasicViewSetup viewSetup,
-		SourceAndConverter<?> sac)
+		SourceAndConverter<?> source)
 	{
 		Displaysettings displaysettings = new Displaysettings(viewSetup.getId());
-		Displaysettings.PullDisplaySettings(sac, displaysettings);
+		Displaysettings.PullDisplaySettings(source, displaysettings);
 		viewSetup.setAttribute(displaysettings);
 		return false;
 	}
@@ -35,11 +35,11 @@ public class DisplaysettingsHandler implements EntityHandler {
 
 	@Override
 	public boolean loadEntity(AbstractSpimData<?> spimData,
-		BasicViewSetup viewSetup, SourceAndConverter<?> sac)
+		BasicViewSetup viewSetup, SourceAndConverter<?> source)
 	{
 		Displaysettings displaysettings = viewSetup.getAttribute(
 			Displaysettings.class);
-		Displaysettings.applyDisplaysettings(sac, displaysettings);
+		Displaysettings.applyDisplaysettings(source, displaysettings);
 		return true;
 	}
 

@@ -5,9 +5,9 @@ import org.scijava.plugin.Menu;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import sc.fiji.bdvpg.scijava.BdvPgMenus;
-import sc.fiji.bdvpg.viewers.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.viewer.bdv.supplier.IBdvSupplier;
 import sc.fiji.bdvpg.command.BdvPlaygroundActionCommand;
-import sc.fiji.bdvpg.scijava.services.SourceBdvDisplayService;
+import sc.fiji.bdvpg.scijava.service.SourceBdvDisplayService;
 
 import java.util.Arrays;
 
@@ -23,7 +23,7 @@ import java.util.Arrays;
 				@Menu(label = "BDV - Set Style (BIOP)", weight = -2)
 		},
 	description = "Set preferences of Bdv Window (Biop)")
-public class BdvSetBiopViewerSettingsCommand implements
+public class BdvStyleBIOPSetCommand implements
 	BdvPlaygroundActionCommand
 {
 
@@ -66,14 +66,14 @@ public class BdvSetBiopViewerSettingsCommand implements
 	String font;
 
 	@Parameter
-	SourceBdvDisplayService sacDisplayService;
+	SourceBdvDisplayService source_display_service;
 
 	@Override
 	public void run() {
 		if (resetToDefault) {
 			IBdvSupplier bdvSupplier = new BiopBdvSupplier(
 				new BiopSerializableBdvOptions());
-			sacDisplayService.setDefaultBdvSupplier(bdvSupplier);
+			source_display_service.setDefaultBdvSupplier(bdvSupplier);
 		}
 		else {
 			BiopSerializableBdvOptions options = new BiopSerializableBdvOptions();
@@ -90,7 +90,7 @@ public class BdvSetBiopViewerSettingsCommand implements
 			options.font = font;
 			options.fontSize = fontSize;
 			IBdvSupplier bdvSupplier = new BiopBdvSupplier(options);
-			sacDisplayService.setDefaultBdvSupplier(bdvSupplier);
+			source_display_service.setDefaultBdvSupplier(bdvSupplier);
 		}
 
 	}

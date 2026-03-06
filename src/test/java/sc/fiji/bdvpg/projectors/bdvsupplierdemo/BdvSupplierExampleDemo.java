@@ -8,14 +8,14 @@ import net.imglib2.type.numeric.ARGBType;
 import org.junit.After;
 import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
-import sc.fiji.bdvpg.viewers.bdv.navigate.ViewerTransformAdjuster;
-import sc.fiji.bdvpg.viewers.bdv.supplier.IBdvSupplier;
+import sc.fiji.bdvpg.viewer.bdv.navigate.ViewerTransformAdjuster;
+import sc.fiji.bdvpg.viewer.bdv.supplier.IBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
-import sc.fiji.bdvpg.services.SourceServices;
+import sc.fiji.bdvpg.service.SourceServices;
 import sc.fiji.bdvpg.source.display.BrightnessAutoAdjuster;
 import sc.fiji.bdvpg.source.display.ColorChanger;
-import sc.fiji.bdvpg.dataset.importer.SpimDataFromXmlImporter;
+import sc.fiji.bdvpg.dataset.importer.XMLToDatasetImporter;
 
 import java.util.List;
 
@@ -36,25 +36,25 @@ public class BdvSupplierExampleDemo {
 			.getNewBdv();
 
 		// Import SpimData
-		new SpimDataFromXmlImporter("src/test/resources/mri-stack.xml").run();
-		new SpimDataFromXmlImporter("src/test/resources/mri-stack-shiftedX.xml")
+		new XMLToDatasetImporter("src/test/resources/mri-stack.xml").run();
+		new XMLToDatasetImporter("src/test/resources/mri-stack-shiftedX.xml")
 			.run();
-		new SpimDataFromXmlImporter("src/test/resources/mri-stack-shiftedY.xml")
+		new XMLToDatasetImporter("src/test/resources/mri-stack-shiftedY.xml")
 			.run();
 
-		// Get a handle on the sacs
-		final List<SourceAndConverter<?>> sacs = SourceServices
+		// Get a handle on the sources
+		final List<SourceAndConverter<?>> sources = SourceServices
 			.getSourceService().getSources();
 
-		// Show all three sacs
-		sacs.forEach(sac -> {
-			SourceServices.getBdvDisplayService().show(bdv, sac);
-			new ViewerTransformAdjuster(bdv, sac).run();
-			new BrightnessAutoAdjuster<>(sac, 0).run();
+		// Show all three sources
+		sources.forEach(source -> {
+			SourceServices.getBdvDisplayService().show(bdv, source);
+			new ViewerTransformAdjuster(bdv, source).run();
+			new BrightnessAutoAdjuster<>(source, 0).run();
 		});
 
 		// Change color of third one
-		new ColorChanger(sacs.get(2), new ARGBType(ARGBType.rgba(0, 255, 0, 255)))
+		new ColorChanger(sources.get(2), new ARGBType(ARGBType.rgba(0, 255, 0, 255)))
 			.run();
 
 	}

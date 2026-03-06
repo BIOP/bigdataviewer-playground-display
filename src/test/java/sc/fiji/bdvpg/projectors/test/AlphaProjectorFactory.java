@@ -145,11 +145,11 @@ public class AlphaProjectorFactory implements
 
 	public interface SourcesMetadata {
 
-		boolean isAlphaSource(SourceAndConverter<?> sac);
+		boolean isAlphaSource(SourceAndConverter<?> source);
 
-		boolean hasAlphaSource(SourceAndConverter<?> sac);
+		boolean hasAlphaSource(SourceAndConverter<?> source);
 
-		SourceAndConverter<FloatType> getAlphaSource(SourceAndConverter<?> sac);
+		SourceAndConverter<FloatType> getAlphaSource(SourceAndConverter<?> source);
 	}
 
 }

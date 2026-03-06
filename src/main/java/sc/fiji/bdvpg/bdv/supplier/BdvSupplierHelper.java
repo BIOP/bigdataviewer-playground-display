@@ -7,9 +7,9 @@ import ch.epfl.biop.bdv.select.SourceSelectorBehaviour;
 import org.scijava.ui.behaviour.DragBehaviour;
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
-import sc.fiji.bdvpg.viewers.behaviour.EditorBehaviourInstaller;
-import sc.fiji.bdvpg.scijava.services.tree.swingdnd.BdvTransferHandler;
-import sc.fiji.bdvpg.services.SourceServices;
+import sc.fiji.bdvpg.viewer.behaviour.EditorBehaviourInstaller;
+import sc.fiji.bdvpg.scijava.service.tree.swingdnd.BdvTransferHandler;
+import sc.fiji.bdvpg.service.SourceServices;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

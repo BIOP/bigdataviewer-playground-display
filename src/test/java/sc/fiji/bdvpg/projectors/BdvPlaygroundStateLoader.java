@@ -35,8 +35,8 @@ import org.junit.Test;
 import sc.fiji.bdvpg.TestHelper;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
-import sc.fiji.bdvpg.services.SourceServiceLoader;
-import sc.fiji.bdvpg.services.SourceServices;
+import sc.fiji.bdvpg.service.SourceServiceLoader;
+import sc.fiji.bdvpg.service.SourceServices;
 
 public class BdvPlaygroundStateLoader {
 
