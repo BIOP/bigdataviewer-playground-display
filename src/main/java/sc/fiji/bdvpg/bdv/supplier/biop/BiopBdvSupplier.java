@@ -19,6 +19,7 @@ import sc.fiji.bdvpg.viewer.bdv.BdvHandleHelper;
 import sc.fiji.bdvpg.viewer.bdv.navigate.RayCastPositionerSliderAdder;
 import sc.fiji.bdvpg.viewer.bdv.navigate.SourceNavigatorSliderAdder;
 import sc.fiji.bdvpg.viewer.bdv.navigate.TimepointAdapterAdder;
+import sc.fiji.bdvpg.viewer.bdv.overlay.AxesOverlay;
 import sc.fiji.bdvpg.viewer.bdv.overlay.SourceNameOverlay;
 import sc.fiji.bdvpg.viewer.bdv.overlay.SourceNameOverlayAdder;
 import sc.fiji.bdvpg.bdv.supplier.BdvSupplierHelper;
@@ -110,10 +111,14 @@ public class BiopBdvSupplier implements IBdvSupplier {
 			new RayCastPositionerSliderAdder(bdvh).run();
 			new SourceNavigatorSliderAdder(bdvh).run();
 			new TimepointAdapterAdder(bdvh).run();
+			AxesOverlay overlay = new AxesOverlay(bdvh);
+			BdvHandleHelper.addOverlay(bdvh, overlay, "axes_overlay");
 		});
 		//SwingUtilities.invokeLater(() -> BdvHandleHelper.addCenterCross(bdvh));
 		//SwingUtilities.invokeLater(() -> new RayCastPositionerSliderAdder(bdvh).run());
 		BdvHandleHelper.addCard(bdvh, "Mode", editorModeToggle, true);
+
+
 
 		return bdvh;
 	}
