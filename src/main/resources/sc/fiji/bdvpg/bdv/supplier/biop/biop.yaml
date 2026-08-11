@@ -1,0 +1,86 @@
+---
+# Keymap of the BIOP viewer, see BiopKeymapManager.
+#
+# Only the navigation bindings which differ from the ones of BigDataViewer are
+# listed. Every other command keeps its default trigger, because
+# CommandDescriptions#augmentInputTriggerConfig fills in whatever this file
+# does not mention. That is also why the bindings which are removed have to be
+# spelled out as 'not mapped' rather than simply left out: the defaults of
+# 'drag rotate fast' and of the two 'scroll ... fast' commands are precisely
+# 'shift button1' and 'shift scroll', so omitting them would bring them back
+# and have them collide with the bindings below.
+#
+# BigDataViewer keeps two parallel families of navigation commands, one for the
+# 3D mode and one, prefixed '2d ', for the 2D mode. Only one is active in a
+# given window, depending on BdvOptions#is2D, and both are set here so that the
+# gestures are the same in either mode.
+#
+# In both modes:
+#   left drag, right drag            pan
+#   middle drag, shift + left drag   rotate
+#   scroll                           zoom
+#   shift + scroll                   move through Z (3D only, 2D has no Z)
+#
+# shift is the only modifier used, because it is the only one which behaves the
+# same on Windows, macOS and Linux. Speeded up variants are left to the
+# keyboard, which is free of the modifier mangling AWT does on mouse events:
+# shift + LEFT/RIGHT rotates by 10 degrees, shift + COMMA/PERIOD steps through
+# Z ten slices at a time, and shift + UP/DOWN zooms faster.
+
+# --- 3D mode ---------------------------------------------------------------
+
+- !mapping
+  action: drag translate
+  contexts: [bdv]
+  triggers: [button1, button3]
+- !mapping
+  action: drag rotate
+  contexts: [bdv]
+  triggers: [button2, shift button1]
+- !mapping
+  action: drag rotate fast
+  contexts: [bdv]
+  triggers: [not mapped]
+- !mapping
+  action: drag rotate slow
+  contexts: [bdv]
+  triggers: [not mapped]
+- !mapping
+  action: scroll zoom
+  contexts: [bdv]
+  triggers: [scroll]
+- !mapping
+  action: scroll browse z
+  contexts: [bdv]
+  triggers: [shift scroll]
+- !mapping
+  action: scroll browse z fast
+  contexts: [bdv]
+  triggers: [not mapped]
+- !mapping
+  action: scroll browse z slow
+  contexts: [bdv]
+  triggers: [not mapped]
+
+# --- 2D mode ---------------------------------------------------------------
+
+- !mapping
+  action: 2d drag translate
+  contexts: [bdv]
+  triggers: [button1, button3]
+- !mapping
+  action: 2d drag rotate
+  contexts: [bdv]
+  triggers: [button2, shift button1]
+- !mapping
+  action: 2d scroll zoom
+  contexts: [bdv]
+  triggers: [scroll]
+- !mapping
+  action: 2d scroll zoom fast
+  contexts: [bdv]
+  triggers: [not mapped]
+- !mapping
+  action: 2d scroll zoom slow
+  contexts: [bdv]
+  triggers: [not mapped]

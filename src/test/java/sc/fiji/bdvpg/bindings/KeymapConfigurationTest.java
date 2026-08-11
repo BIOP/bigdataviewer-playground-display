@@ -17,6 +17,7 @@ import org.scijava.ui.behaviour.io.yaml.YamlConfigIO;
 import sc.fiji.bdvpg.TestHelper;
 import sc.fiji.bdvpg.bdv.supplier.BdvSupplierHelper;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopBdvSupplier;
+import sc.fiji.bdvpg.bdv.supplier.biop.BiopKeymapManager;
 import sc.fiji.bdvpg.bdv.supplier.biop.BiopSerializableBdvOptions;
 import sc.fiji.bdvpg.service.SourceServices;
 import sc.fiji.bdvpg.viewer.bdv.config.BdvKeymapHelper;
@@ -25,12 +26,17 @@ import sc.fiji.bdvpg.viewer.behaviour.EditorBehaviourInstaller;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -103,8 +109,83 @@ public class KeymapConfigurationTest {
 			"the declared config is not the one of the keymap, so editing the keymap would not match what the window uses",
 			manager.getForwardSelectedKeymap().getConfig(), config);
 
-		assertSame("the supplier did not share the playground keymap manager",
+		assertSame("the supplier did not share the BIOP keymap manager",
+			BiopKeymapManager.getInstance(), manager);
+
+		// The BIOP bindings belong to the BIOP window style only, the other
+		// suppliers keep the ones of BigDataViewer
+		assertNotSame(
+			"the BIOP style must not take over the keymap of the other window styles",
 			BdvKeymapHelper.getKeymapManager(), manager);
+	}
+
+	/**
+	 * The BIOP keymap has to be a builtin, so that it can neither overwrite nor
+	 * be overwritten by what the user edits, and it has to come first, so that it
+	 * is the one selected on an installation which has no keymap configuration
+	 * yet.
+	 */
+	@Test
+	public void testBiopKeymapIsBuiltinAndComesFirst() {
+		final List<Keymap> builtin = BiopKeymapManager.getInstance()
+			.getBuiltinStyles();
+
+		assertEquals("the BIOP keymap is not the one selected by default",
+			BiopKeymapManager.BIOP_KEYMAP_NAME, builtin.get(0).getName());
+
+		assertTrue("the BigDataViewer keymap is no longer reachable", builtin
+			.stream().anyMatch(k -> "Default".equals(k.getName())));
+
+		// A builtin is never serialized, so it cannot clobber a user keymap
+		assertTrue("the BIOP keymap was stored as a user keymap", BiopKeymapManager
+			.getInstance().getUserStyles().stream().noneMatch(
+				k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k.getName())));
+	}
+
+	/**
+	 * The navigation bindings the BIOP keymap is for. Both the 3D commands and
+	 * their '2d ' counterparts are checked: BigDataViewer keeps two parallel
+	 * families and only one is active in a given window, so a 2D window would
+	 * otherwise keep the old feel.
+	 * <p>
+	 * The 'not mapped' assertions are the point of the test as much as the others
+	 * are: CommandDescriptions#augmentInputTriggerConfig puts back the default
+	 * trigger of every command a keymap does not mention, and the defaults it
+	 * would put back here are exactly the triggers used for panning and zooming.
+	 */
+	@Test
+	public void testBiopKeymapRebindsBothNavigationFamilies() {
+		final Keymap biop = BiopKeymapManager.getInstance().getBuiltinStyles()
+			.stream().filter(k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k
+				.getName())).findFirst().orElse(null);
+		assertNotNull("the BIOP keymap was not loaded", biop);
+
+		// 3D mode
+		assertTriggers(biop, "drag translate", "button1", "button3");
+		assertTriggers(biop, "drag rotate", "button2", "shift button1");
+		assertTriggers(biop, "drag rotate fast", "not mapped");
+		assertTriggers(biop, "drag rotate slow", "not mapped");
+		assertTriggers(biop, "scroll zoom", "scroll");
+		assertTriggers(biop, "scroll browse z", "shift scroll");
+		assertTriggers(biop, "scroll browse z fast", "not mapped");
+		assertTriggers(biop, "scroll browse z slow", "not mapped");
+
+		// 2D mode, same gestures, minus the Z which does not exist there
+		assertTriggers(biop, "2d drag translate", "button1", "button3");
+		assertTriggers(biop, "2d drag rotate", "button2", "shift button1");
+		assertTriggers(biop, "2d scroll zoom", "scroll");
+		assertTriggers(biop, "2d scroll zoom fast", "not mapped");
+		assertTriggers(biop, "2d scroll zoom slow", "not mapped");
+	}
+
+	private static void assertTriggers(Keymap keymap, String action,
+		String... expected)
+	{
+		final Set<String> actual = keymap.getConfig().getInputs(action,
+			KeyConfigContexts.BIGDATAVIEWER).stream().map(InputTrigger::toString)
+			.collect(Collectors.toSet());
+		assertEquals("unexpected triggers for '" + action + "'", new HashSet<>(
+			Arrays.asList(expected)), actual);
 	}
 
 	/**
@@ -127,8 +208,11 @@ public class KeymapConfigurationTest {
 			fromFile = new InputTriggerConfig(YamlConfigIO.read(reader));
 		}
 
-		// Rebind the editor mode toggle before the window is built
-		final Keymap keymap = BdvKeymapHelper.getKeymap();
+		// Rebind the editor mode toggle before the window is built. The BIOP
+		// windows follow the keymap of their own manager, not the one of the
+		// other window styles.
+		final Keymap keymap = BiopKeymapManager.getInstance()
+			.getForwardSelectedKeymap();
 		keymap.getConfig().set(fromFile);
 
 		SourceServices.getBdvDisplayService().setDefaultBdvSupplier(
