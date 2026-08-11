@@ -6,6 +6,7 @@ import bdv.util.BdvOptions;
 import bdv.viewer.render.AccumulateProjectorARGB;
 import bdv.viewer.render.AccumulateProjectorFactory;
 import net.imglib2.type.numeric.ARGBType;
+import sc.fiji.bdvpg.viewer.bdv.config.BdvKeymapHelper;
 
 public class BiopSerializableBdvOptions {
 
@@ -52,6 +53,10 @@ public class BiopSerializableBdvOptions {
 			o = o.accumulateProjectorFactory(this.accumulateProjectorFactory);
 		}
 		if (this.is2D) o = o.is2D();
+
+		// Bindings are user configurable and shared between all playground
+		// windows, see BdvKeymapHelper
+		o = BdvKeymapHelper.applyTo(o);
 
 		return o;
 	}

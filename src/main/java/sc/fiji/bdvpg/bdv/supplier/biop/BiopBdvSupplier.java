@@ -10,6 +10,8 @@ import bdv.viewer.Interpolation;
 import bdv.viewer.ViewerStateChange;
 import bdv.viewer.ViewerStateChangeListener;
 import ch.epfl.biop.bdv.select.SourceSelectorBehaviour;
+import ch.epfl.biop.bdv.select.ToggleListener;
+import sc.fiji.bdvpg.viewer.bdv.config.BdvKeymapHelper;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -65,19 +67,46 @@ public class BiopBdvSupplier implements IBdvSupplier {
 
 		BdvSupplierHelper.addSourcesDragAndDrop(bdvh);
 
-		SourceSelectorBehaviour ssb = BdvSupplierHelper.addEditorMode(bdvh, "");
+		SourceSelectorBehaviour ssb = BdvSupplierHelper.addEditorMode(bdvh);
 		bdvh.getSplitPanel().setCollapsed(false);
 
 		JPanel editorModeToggle = new JPanel();
-		JButton editorToggle = new JButton("Editor Mode");
+		JButton editorToggle = new JButton();
+
+		// The label announces the shortcut which actually toggles the mode, so it
+		// stays right if the user rebinds it, and names the mode the next click
+		// switches to
+		Runnable updateEditorToggleLabel = () -> {
+			String toggleKey = BdvKeymapHelper.getTriggerLabel(bdvh,
+				SourceSelectorBehaviour.SOURCES_SELECTOR_TOGGLE_MAP,
+				SourceSelectorBehaviour.SOURCES_SELECTOR_TOGGLE_KEYS);
+			editorToggle.setText((ssb.isEnabled() ? "Navigation Mode '"
+				: "Editor Mode '") + toggleKey + "'");
+		};
+		updateEditorToggleLabel.run();
+		BdvKeymapHelper.onKeymapChanged(bdvh, updateEditorToggleLabel);
+
+		// Keep the label in sync however the mode was toggled, from this button or
+		// from the keyboard
+		ssb.addToggleListener(new ToggleListener() {
+
+			@Override
+			public void isEnabled() {
+				updateEditorToggleLabel.run();
+			}
+
+			@Override
+			public void isDisabled() {
+				updateEditorToggleLabel.run();
+			}
+		});
+
 		editorToggle.addActionListener((e) -> {
 			if (ssb.isEnabled()) {
 				ssb.disable();
-				editorToggle.setText("Editor Mode 'E'");
 			}
 			else {
 				ssb.enable();
-				editorToggle.setText("Navigation Mode 'E'");
 			}
 		});
 
