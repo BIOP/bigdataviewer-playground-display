@@ -84,8 +84,8 @@
 		<license.copyrightOwners>N/A</license.copyrightOwners>
 		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
-		<bigdataviewer-playground.version>0.21.0</bigdataviewer-playground.version>
-		<bigdataviewer-spimdata-extras.version>0.5.0</bigdataviewer-spimdata-extras.version>
+		<bigdataviewer-playground.version>0.23.0</bigdataviewer-playground.version>
+		<bigdataviewer-spimdata-extras.version>0.23.0</bigdataviewer-spimdata-extras.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 
