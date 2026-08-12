@@ -26,7 +26,12 @@ import java.util.List;
  * drag rotates instead of panning, and a left click on one of the axis circles
  * still animates the view to that plane,</li>
  * <li>over the gizmo, scrolling still zooms and shift + scrolling still moves
- * through Z: the gizmo only takes over the plain left button.</li>
+ * through Z: the gizmo only takes over the plain left button,</li>
+ * <li>in the preferences dialog, File &gt; Preferences or {@code ctrl COMMA},
+ * the keymap page offers "BIOP" besides "Default", "BIOP" is the selected one,
+ * and the table lists the bindings above. Pressing OK and reopening the dialog
+ * has to leave "BIOP" selected: it used to fall back to "Default" and save
+ * that.</li>
  * </ul>
  */
 public class AxesOverlayRotationDemo {

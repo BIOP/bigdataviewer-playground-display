@@ -28,7 +28,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -120,26 +119,37 @@ public class KeymapConfigurationTest {
 	}
 
 	/**
-	 * The BIOP keymap has to be a builtin, so that it can neither overwrite nor
-	 * be overwritten by what the user edits, and it has to come first, so that it
-	 * is the one selected on an installation which has no keymap configuration
-	 * yet.
+	 * The keymap page of the preferences dialog does not work on the manager of
+	 * the window, but on a plain {@code new KeymapManager()} which
+	 * {@code KeymapSettingsPage} creates to hold the edits which have not been
+	 * applied yet, and which it fills with
+	 * {@code AbstractStyleManager#set(other)}. Only the user keymaps and the
+	 * <em>name</em> of the selection make it through that copy, so a keymap
+	 * shipped as a builtin of ours would be missing from the dialog, and the
+	 * selection would silently fall back to the first builtin the plain manager
+	 * knows, "Default". Applying that would then save it, turning the BIOP
+	 * navigation off for good.
 	 */
 	@Test
-	public void testBiopKeymapIsBuiltinAndComesFirst() {
-		final List<Keymap> builtin = BiopKeymapManager.getInstance()
-			.getBuiltinStyles();
+	public void testBiopKeymapReachesThePreferencesDialog() {
+		final BiopKeymapManager manager = BiopKeymapManager.getInstance();
 
-		assertEquals("the BIOP keymap is not the one selected by default",
-			BiopKeymapManager.BIOP_KEYMAP_NAME, builtin.get(0).getName());
-
-		assertTrue("the BigDataViewer keymap is no longer reachable", builtin
-			.stream().anyMatch(k -> "Default".equals(k.getName())));
-
-		// A builtin is never serialized, so it cannot clobber a user keymap
-		assertTrue("the BIOP keymap was stored as a user keymap", BiopKeymapManager
-			.getInstance().getUserStyles().stream().noneMatch(
+		assertTrue("the BIOP keymap is not a user keymap, so the preferences" +
+			" dialog cannot see it", manager.getUserStyles().stream().anyMatch(
 				k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k.getName())));
+
+		// Exactly what KeymapSettingsPage does with the manager of the window
+		final KeymapManager editing = new KeymapManager();
+		editing.set(manager);
+
+		assertTrue("the BIOP keymap is absent from the preferences dialog", editing
+			.getUserStyles().stream().anyMatch(
+				k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k.getName())));
+
+		assertEquals(
+			"the preferences dialog changed the selected keymap just by opening",
+			manager.getSelectedStyle().getName(), editing.getSelectedStyle()
+				.getName());
 	}
 
 	/**
@@ -155,9 +165,9 @@ public class KeymapConfigurationTest {
 	 */
 	@Test
 	public void testBiopKeymapRebindsBothNavigationFamilies() {
-		final Keymap biop = BiopKeymapManager.getInstance().getBuiltinStyles()
-			.stream().filter(k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k
-				.getName())).findFirst().orElse(null);
+		final Keymap biop = BiopKeymapManager.getInstance().getUserStyles().stream()
+			.filter(k -> BiopKeymapManager.BIOP_KEYMAP_NAME.equals(k.getName()))
+			.findFirst().orElse(null);
 		assertNotNull("the BIOP keymap was not loaded", biop);
 
 		// 3D mode
