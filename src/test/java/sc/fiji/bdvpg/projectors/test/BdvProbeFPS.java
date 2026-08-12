@@ -64,8 +64,7 @@ public class BdvProbeFPS {
 		}
 		final MyTarget target = new MyTarget();
 		final MultiResolutionRenderer renderer = new MultiResolutionRenderer(target,
-			() -> {}, new double[] { 1 }, 0, 1, null, false, viewer.getOptionValues()
-				.getAccumulateProjectorFactory(), new CacheControl.Dummy());
+			() -> {}, new double[] { 1 }, 0, 1, null, false, new CacheControl.Dummy());
 		// progressWriter.setProgress( 0 );
 		for (int timepoint = 0; timepoint <= nFrames; ++timepoint) {
 			// renderState.setCurrentTimepoint( timepoint );
